@@ -19,11 +19,13 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 | Jadval | Nima uchun | Misol |
 |---|---|---|
 | **Valyuta** | Pul birliklari. Hamma uchun umumiy, faqat superadmin qo'shadi. | UZS, USD |
-| **Hisob** | Pul turgan joy. Har bir hisobda bitta valyuta bor. | Naqd pul, Karta |
+| **Hisob** | Pul turgan joy. Har bir hisobda bitta valyuta va boshlang'ich summa bor. | Naqd pul, Karta |
 | **Chiqim turi** | Pul nimaga sarflangani. | Yo'lkira, Tushlik, Salomatlik |
 | **Kirim turi** | Pul qayerdan kelgani. | Oylik, Avans, Kunlik ish haqi |
 | **Chiqim** | Bitta sarf: summa, sana, tur va hisob. | 15 000 so'm, bugun, Tushlik, Naqd pul |
 | **Kirim** | Bitta daromad: summa, sana, tur va hisob. | 3 000 000 so'm, 5-oktabr, Avans, Karta |
+
+**Hisobning joriy qoldig'i** bazada saqlanmaydi, har safar hisoblanadi: boshlang'ich summa + shu hisobdagi kirimlar − shu hisobdagi chiqimlar. Shuning uchun kirim yoki chiqim o'zgarsa, qoldiq o'zi to'g'ri chiqadi.
 
 **Hisobotlar** (kunlik, haftalik, oylik) alohida jadval emas. Dastur ularni kirim va chiqimlardan o'zi hisoblab beradi: jami kirim, jami chiqim va ularning farqi.
 
@@ -41,7 +43,7 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 |---|---|---|
 | 1 | Loyiha skeleti va sozlamalar | Tayyor |
 | 2 | Modellar (jadvallar) | Tayyor |
-| 3 | Serializer'lar (ma'lumotni tekshirish va API formatiga o'tkazish) | Kutilmoqda |
+| 3 | Serializer'lar (ma'lumotni tekshirish va API formatiga o'tkazish) | Tayyor |
 | 4 | View'lar (API amallari va hisobotlar) | Kutilmoqda |
 | 5 | Admin panel va URL manzillar | Kutilmoqda |
 | 6 | 3 tilga tarjima | Kutilmoqda |

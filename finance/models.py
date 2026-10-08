@@ -25,6 +25,9 @@ class Account(models.Model):
     currency = models.ForeignKey(
         Currency, on_delete=models.PROTECT, related_name="accounts", verbose_name=_("Valyuta")
     )
+    initial_balance = models.DecimalField(
+        _("Boshlang'ich summa"), max_digits=14, decimal_places=2, default=0
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
