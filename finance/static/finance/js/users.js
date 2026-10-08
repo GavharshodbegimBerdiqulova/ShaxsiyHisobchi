@@ -1,9 +1,9 @@
-// Foydalanuvchilar ro'yxati (faqat superadmin uchun)
+
 
 initApp().then(async (user) => {
   if (!user) return;
 
-  // Oddiy foydalanuvchi bu sahifaga kira olmaydi
+
   if (!user.is_superuser) {
     window.location.href = "/";
     return;

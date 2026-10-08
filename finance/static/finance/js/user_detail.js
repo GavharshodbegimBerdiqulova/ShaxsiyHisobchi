@@ -1,6 +1,6 @@
-// Bitta foydalanuvchining hamma ma'lumoti (faqat superadmin uchun)
 
-// /users/5/ -> 5
+
+
 const userId = window.location.pathname.split("/").filter(Boolean).pop();
 
 function statCard(label, value, code, className) {
@@ -41,7 +41,7 @@ async function loadAccounts() {
 
   $("accounts-empty").hidden = result.data.length > 0;
 
-  // Valyuta bo'yicha jami qoldiq
+
   const totals = {};
   result.data.forEach((account) => {
     totals[account.currency_code] = (totals[account.currency_code] || 0) + Number(account.balance);
@@ -92,7 +92,7 @@ async function loadRows(url, bodyId, emptyId, amountClass) {
 initApp().then(async (user) => {
   if (!user) return;
 
-  // Oddiy foydalanuvchi bu sahifaga kira olmaydi
+
   if (!user.is_superuser) {
     window.location.href = "/";
     return;

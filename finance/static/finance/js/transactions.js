@@ -1,6 +1,6 @@
-// Kirimlar va chiqimlar sahifasi (ikkalasi uchun bitta kod)
 
-const kind = $("page-data").dataset.kind; // "income" yoki "expense"
+
+const kind = $("page-data").dataset.kind;
 const URL_ITEMS = kind === "income" ? "/api/incomes/" : "/api/expenses/";
 const URL_TYPES = kind === "income" ? "/api/income-types/" : "/api/expense-types/";
 
@@ -22,7 +22,7 @@ function typeOptions() {
 }
 
 function fillSelect(select, options) {
-  const first = select.options[0]; // "Hammasi"
+  const first = select.options[0];
   select.replaceChildren(first);
   options.forEach((o) => select.append(el("option", { value: o.value, text: o.label })));
 }
@@ -57,7 +57,7 @@ async function loadRows() {
   });
 }
 
-// item bo'lsa o'zgartirish, bo'lmasa yangi qo'shish
+
 function openForm(item = null) {
   openModal({
     title: item ? t("tx.edit") : (kind === "income" ? t("tx.new_income") : t("tx.new_expense")),

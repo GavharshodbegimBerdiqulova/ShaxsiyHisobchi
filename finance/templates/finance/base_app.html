@@ -3,7 +3,7 @@
 
 {% block body_class %}app-page{% endblock %}
 
-{# Kirgandan keyingi hamma sahifalar uchun umumiy qolip: chapda sidebar, tepada navbar #}
+
 {% block nav %}
 <div class="backdrop" id="backdrop" hidden></div>
 
@@ -18,7 +18,7 @@
     <a href="/types/" data-i18n="nav.types">🏷️ Turlar</a>
     <a href="/profile/" data-i18n="nav.profile">🌷 Profil</a>
 
-    {# Faqat superadmin uchun (JS ko'rsatadi) #}
+
     <div class="side-divider" data-admin-only hidden data-i18n="nav.superadmin">Superadmin 👑</div>
     <a href="/users/" data-admin-only hidden data-i18n="nav.users">👥 Foydalanuvchilar</a>
     <a href="/currencies/" data-admin-only hidden data-i18n="nav.currencies">💱 Valyutalar</a>
@@ -52,7 +52,7 @@
 
 {% block page %}{% endblock %}
 
-{# Qo'shish va o'zgartirish oynasi #}
+
 <div class="modal" id="modal" hidden>
   <div class="card modal-box">
     <h3 id="modal-title"></h3>

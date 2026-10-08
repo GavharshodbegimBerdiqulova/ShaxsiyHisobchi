@@ -4,7 +4,6 @@ from django.utils.translation import get_language, gettext_lazy as _
 
 
 class TranslatedName(models.Model):
-    # Nomi 3 tilda saqlanadigan jadvallar uchun umumiy qism
     name_uz = models.CharField(_("Nomi (UZ)"), max_length=100)
     name_ru = models.CharField(_("Nomi (RU)"), max_length=100)
     name_en = models.CharField(_("Nomi (EN)"), max_length=100)
@@ -14,13 +13,11 @@ class TranslatedName(models.Model):
 
     @property
     def translated_name(self):
-        # So'rov tilidagi nom; u bo'sh bo'lsa o'zbekcha nom
         language = (get_language() or "uz")[:2]
         return getattr(self, "name_" + language, "") or self.name_uz
 
 
 class Currency(TranslatedName):
-    # Valyutalar hamma uchun umumiy, ularni faqat superadmin qo'shadi
     code = models.CharField(_("Kodi"), max_length=10, unique=True)
 
     class Meta:
@@ -32,7 +29,6 @@ class Currency(TranslatedName):
 
 
 class Account(TranslatedName):
-    # Hisob: Naqd pul, Karta va hokazo
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="accounts", verbose_name=_("Egasi")
     )
@@ -54,7 +50,6 @@ class Account(TranslatedName):
 
 
 class ExpenseType(TranslatedName):
-    # Chiqim turi: Yo'lkira, Tushlik, Salomatlik
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="expense_types", verbose_name=_("Egasi")
     )
@@ -69,7 +64,6 @@ class ExpenseType(TranslatedName):
 
 
 class IncomeType(TranslatedName):
-    # Kirim turi: Oylik, Avans, Kunlik ish haqi
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="income_types", verbose_name=_("Egasi")
     )

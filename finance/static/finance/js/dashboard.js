@@ -1,4 +1,4 @@
-// Bosh sahifa: hisobot, hisoblar va oxirgi kirim-chiqimlar
+
 
 function statCard(label, value, code, className) {
   return el(
@@ -80,7 +80,7 @@ initApp().then((user) => {
   loadLast("/api/incomes/", "last-incomes");
   loadLast("/api/expenses/", "last-expenses");
 
-  // Kun, hafta, oy tugmalari
+
   document.querySelectorAll("#period-tabs .tab").forEach((tab) => {
     tab.addEventListener("click", () => {
       document.querySelectorAll("#period-tabs .tab").forEach((t) => t.classList.remove("active"));

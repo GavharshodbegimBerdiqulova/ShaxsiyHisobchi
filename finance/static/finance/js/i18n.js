@@ -1,4 +1,4 @@
-// Tarjima: o'zbekcha (uz), ruscha (ru), inglizcha (en)
+
 
 const LANGS = ["uz", "ru", "en"];
 
@@ -192,23 +192,23 @@ const TEXTS = {
 
 function getLang() {
   let lang = null;
-  try { lang = localStorage.getItem("lang"); } catch (e) { /* localStorage yo'q bo'lsa */ }
+  try { lang = localStorage.getItem("lang"); } catch (e) {  }
   return LANGS.includes(lang) ? lang : "uz";
 }
 
-// Tilni almashtiradi va sahifani qayta yuklaydi (ma'lumotlar yangi tilda chiqadi)
+
 function setLang(lang) {
   localStorage.setItem("lang", lang);
   window.location.reload();
 }
 
-// Kalit bo'yicha tarjima qaytaradi
+
 function t(key) {
   const texts = TEXTS[getLang()];
   return texts[key] !== undefined ? texts[key] : TEXTS.uz[key] !== undefined ? TEXTS.uz[key] : key;
 }
 
-// Sahifadagi data-i18n belgili elementlarni tarjima qiladi
+
 function translatePage() {
   document.documentElement.lang = getLang();
 
@@ -219,7 +219,7 @@ function translatePage() {
   const page = document.body.dataset.page;
   if (page) document.title = t(page) + " | ShaxsiyHisobchi";
 
-  // Til tugmalarida hozirgi til belgilanadi
+
   document.querySelectorAll(".lang-btn").forEach((button) => {
     button.classList.toggle("active", button.dataset.lang === getLang());
     button.addEventListener("click", () => setLang(button.dataset.lang));

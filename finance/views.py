@@ -22,9 +22,6 @@ from .serializers import (
 )
 
 
-# ---------- Auth ----------
-
-# Swagger'da javob ko'rinishini ko'rsatish uchun
 LoginResponseSerializer = inline_serializer(
     "LoginResponse",
     {
@@ -47,13 +44,11 @@ RefreshBodySerializer = inline_serializer("RefreshBody", {"refresh": serializers
 
 
 def get_tokens(user):
-    # Foydalanuvchi uchun access va refresh token yaratadi
     refresh = RefreshToken.for_user(user)
     return {"access": str(refresh.access_token), "refresh": str(refresh)}
 
 
 class RegisterView(generics.CreateAPIView):
-    # Ro'yxatdan o'tish: login talab qilinmaydi
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
@@ -68,7 +63,6 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(APIView):
-    # login (username yoki email) va parol bersa, access va refresh token qaytaradi
     permission_classes = [AllowAny]
 
     @extend_schema(request=LoginSerializer, responses={200: LoginResponseSerializer})
@@ -82,7 +76,6 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    # refresh token blacklist'ga qo'shiladi, shundan keyin u ishlamaydi
     @extend_schema(request=RefreshBodySerializer, responses={200: None})
     def post(self, request):
         try:
@@ -96,28 +89,19 @@ class LogoutView(APIView):
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    # O'zining ma'lumotini ko'rish va o'zgartirish
     serializer_class = UserSerializer
 
     def get_object(self):
         return self.request.user
 
 
-# ---------- Asosiy CRUD view'lar ----------
-
 class OwnerViewSet(viewsets.ModelViewSet):
-    """Hamma CRUD view'lar uchun umumiy qoidalar:
-    - oddiy foydalanuvchi faqat o'z yozuvlarini ko'radi, superadmin hammasini
-    - yangi yozuv egasi avtomatik joriy foydalanuvchi bo'ladi
-    - ishlatilayotgan yozuvni o'chirib bo'lmaydi
-    """
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser]
 
     def get_queryset(self):
         queryset = super().get_queryset()
         if not self.request.user.is_superuser:
             queryset = queryset.filter(owner=self.request.user)
-        # Superadmin ?owner=<id> bilan bitta foydalanuvchining yozuvlarini ko'ra oladi
         owner = self.request.query_params.get("owner")
         if owner and owner.isdigit():
             queryset = queryset.filter(owner_id=owner)
@@ -137,7 +121,6 @@ class OwnerViewSet(viewsets.ModelViewSet):
 
 
 class CurrencyViewSet(viewsets.ModelViewSet):
-    # Valyutani hamma ko'radi, qo'shish va o'zgartirishni faqat superadmin qiladi
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
     permission_classes = [IsSuperuserOrReadOnly]
@@ -168,7 +151,6 @@ class IncomeTypeViewSet(OwnerViewSet):
 
 
 def filter_by_params(queryset, params):
-    # Kirim va chiqim ro'yxatini filtrlash: ?date_from=&date_to=&account=&type=
     if params.get("date_from"):
         queryset = queryset.filter(date__gte=params["date_from"])
     if params.get("date_to"):
@@ -196,8 +178,6 @@ class IncomeViewSet(OwnerViewSet):
         return filter_by_params(super().get_queryset(), self.request.query_params)
 
 
-# ---------- Foydalanuvchilar (faqat superadmin) ----------
-
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.annotate(
         accounts_count=Count("accounts", distinct=True),
@@ -208,24 +188,17 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsSuperuser]
 
 
-# ---------- Hisobot ----------
-
 def get_period_dates(period, day):
-    # Berilgan kun uchun davr boshi va oxirini topadi
     if period == "day":
         return day, day
     if period == "week":
-        start = day - timedelta(days=day.weekday())  # dushanba
+        start = day - timedelta(days=day.weekday())
         return start, start + timedelta(days=6)
     last_day = calendar.monthrange(day.year, day.month)[1]
     return day.replace(day=1), day.replace(day=last_day)
 
 
 class ReportView(APIView):
-    """Kunlik, haftalik yoki oylik hisobot.
-    ?period=day|week|month (standart: day) va ?date=YYYY-MM-DD (standart: bugun).
-    Valyutalar aralashib ketmasligi uchun natija valyuta bo'yicha alohida beriladi.
-    """
 
     @extend_schema(
         parameters=[
@@ -263,13 +236,11 @@ class ReportView(APIView):
             incomes = incomes.filter(owner=request.user)
             expenses = expenses.filter(owner=request.user)
         else:
-            # Superadmin ?user=<id> bilan bitta foydalanuvchining hisobotini ko'radi
             user_id = request.query_params.get("user")
             if user_id and user_id.isdigit():
                 incomes = incomes.filter(owner_id=user_id)
                 expenses = expenses.filter(owner_id=user_id)
 
-        # valyuta kodi bo'yicha jami summalar
         income_sums = incomes.values("account__currency__code").annotate(total=Sum("amount"))
         expense_sums = expenses.values("account__currency__code").annotate(total=Sum("amount"))
 

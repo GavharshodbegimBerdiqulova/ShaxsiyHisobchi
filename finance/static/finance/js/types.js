@@ -1,4 +1,4 @@
-// Kirim va chiqim turlari sahifasi
+
 
 function urlFor(kind) {
   return kind === "income" ? "/api/income-types/" : "/api/expense-types/";

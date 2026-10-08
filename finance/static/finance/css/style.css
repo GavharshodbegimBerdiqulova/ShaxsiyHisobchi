@@ -1,4 +1,4 @@
-/* ShaxsiyHisobchi: pushti-gulli uslub */
+
 
 :root {
   --bg: #fff0f6;
@@ -28,7 +28,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ---------- Gul bezaklari ---------- */
+
 .decor {
   position: fixed;
   z-index: 0;
@@ -46,7 +46,7 @@ body {
   padding: 24px 16px 60px;
 }
 
-/* ---------- Kartochka ---------- */
+
 .card {
   background: var(--card);
   border-radius: 24px;
@@ -59,7 +59,7 @@ body {
 h1, h2, h3 { margin-top: 0; color: var(--pink-dark); }
 .muted { color: var(--muted); }
 
-/* ---------- Tugmalar ---------- */
+
 .btn {
   background: linear-gradient(135deg, #f78fb3, var(--pink));
   color: #fff;
@@ -76,7 +76,7 @@ h1, h2, h3 { margin-top: 0; color: var(--pink-dark); }
 .btn-small { padding: 8px 16px; font-size: 0.9rem; }
 .btn-light { background: var(--pink-light); color: var(--pink-dark); box-shadow: none; }
 
-/* ---------- Formalar ---------- */
+
 .form { display: flex; flex-direction: column; gap: 14px; }
 .form[hidden] { display: none; }
 
@@ -107,7 +107,7 @@ input:focus, select:focus {
 }
 .form-error[hidden] { display: none; }
 
-/* ---------- Kirish sahifasi ---------- */
+
 .auth-page .container {
   display: flex;
   align-items: center;
@@ -141,7 +141,7 @@ input:focus, select:focus {
 }
 .tab.active { background: #fff; box-shadow: 0 2px 8px rgba(231, 84, 128, 0.2); }
 
-/* ---------- Yuqori menyu ---------- */
+
 .nav {
   position: relative;
   z-index: 2;
@@ -165,7 +165,7 @@ input:focus, select:focus {
 }
 .nav-links a:hover, .nav-links a.active { background: var(--pink-light); color: var(--pink-dark); }
 
-/* ---------- Kichik xabar ---------- */
+
 .toast {
   position: fixed;
   bottom: 24px;
@@ -186,9 +186,6 @@ input:focus, select:focus {
   .nav { padding: 12px 16px; }
 }
 
-/* =====================================================
-   Kirgandan keyingi sahifalar: sidebar va umumiy qolip
-   ===================================================== */
 
 .small { font-size: 0.85rem; }
 .right { text-align: right; }
@@ -278,7 +275,7 @@ input:focus, select:focus {
 .empty { color: var(--muted); text-align: center; padding: 14px 0; margin: 0; }
 .empty[hidden] { display: none; }
 
-/* ---------- Hisobot kartochkalari ---------- */
+
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 12px; }
 .stat { border-radius: 20px; padding: 16px 18px; }
 .stat-label { font-weight: 600; color: var(--muted); }
@@ -287,7 +284,7 @@ input:focus, select:focus {
 .stat-expense { background: #ffe8ee; } .stat-expense .stat-value { color: var(--expense); }
 .stat-balance { background: var(--lavender); } .stat-balance .stat-value { color: #7a5ac7; }
 
-/* ---------- Hisob kartochkalari ---------- */
+
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
 .account-card {
   background: linear-gradient(135deg, var(--peach), var(--pink-light));
@@ -297,7 +294,7 @@ input:focus, select:focus {
 .account-name { font-weight: 700; }
 .account-balance { font-size: 1.3rem; font-weight: 700; color: var(--pink-dark); margin-top: 6px; }
 
-/* ---------- Ro'yxat ---------- */
+
 .list { list-style: none; margin: 0; padding: 0; }
 .list li {
   display: flex;
@@ -312,7 +309,7 @@ input:focus, select:focus {
 .amount-income { color: var(--income); }
 .amount-expense { color: var(--expense); }
 
-/* ---------- Jadval ---------- */
+
 .table-wrap { overflow-x: auto; }
 .table { width: 100%; border-collapse: collapse; }
 .table th { text-align: left; color: var(--muted); font-size: 0.85rem; padding: 10px 12px; border-bottom: 2px solid var(--pink-light); white-space: nowrap; }
@@ -325,12 +322,12 @@ input:focus, select:focus {
 .icon-btn { border: none; background: transparent; font-size: 1.1rem; cursor: pointer; padding: 6px; border-radius: 10px; }
 .icon-btn:hover { background: var(--pink-light); }
 
-/* ---------- Filtrlar ---------- */
+
 .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
 .filters label { font-size: 0.85rem; }
 .filters input, .filters select { padding: 8px 12px; }
 
-/* ---------- Oyna (modal) ---------- */
+
 .modal {
   position: fixed; inset: 0;
   z-index: 8;
@@ -343,7 +340,7 @@ input:focus, select:focus {
 .modal-buttons { display: flex; gap: 10px; }
 .modal-buttons .btn { flex: 1; }
 
-/* ---------- Telefon ---------- */
+
 @media (max-width: 900px) {
   .app-page .container { margin-left: 0; padding: 16px 14px 60px; }
   .sidebar { transform: translateX(-100%); transition: transform 0.25s; box-shadow: var(--shadow); }
@@ -354,7 +351,6 @@ input:focus, select:focus {
 }
 
 
-/* ---------- Navbar (tepada): til almashtirgich va foydalanuvchi ---------- */
 .navbar {
   position: sticky;
   top: 0;
@@ -403,7 +399,6 @@ input:focus, select:focus {
 }
 
 
-/* ---------- Foydalanuvchilar sahifasi (superadmin) ---------- */
 .badge {
   display: inline-block;
   padding: 2px 10px;

@@ -40,8 +40,6 @@ Server yurgandan keyin brauzerda oching:
 
 Boshlash uchun: Swagger'da `register` orqali ro'yxatdan o'ting, `login` qiling, javobdagi `access` tokenni **Authorize** tugmasiga joylang. Shundan keyin hisob, tur, kirim va chiqim qo'shishingiz mumkin. Hisob ochishdan oldin valyuta kerak. Valyutani (masalan UZS) faqat superadmin qo'sha oladi: admin panelda **Valyutalar** bo'limidan yoki superadmin sifatida `login` qilib `POST /api/currencies/` orqali qo'shing.
 
-Testlarni yurgizish: `python manage.py test`
-
 ## Asosiy qoidalar
 
 - **Hammasi dinamik.** Chiqim turlari, kirim turlari, hisoblar va valyutalar kodga yozib qo'yilmagan. Ularni dasturning o'zidan qo'shish, o'zgartirish va o'chirish mumkin.
@@ -177,7 +175,7 @@ Himoyalangan endpoint'larni sinash uchun: avval `login` ni ishga tushiring, javo
 | 5.5 | Frontend (sidebar, barcha sahifalar, pushti-gulli uslub) | Tayyor |
 | 6 | 3 tilga tarjima (API xabarlari va frontend, til almashtirgich) | Tayyor |
 | 6.5 | Superadmin uchun foydalanuvchilar bo'limi | Tayyor |
-| 7 | Tekshirish va sinov | Avtomatik testlar tayyor (38 ta), qo'lda sinash qoldi |
+| 7 | Tekshirish va sinov | Qo'lda sinash qoldi |
 | 8 | Himoyaga tayyorgarlik | Kutilmoqda |
 
 Frontend (Django template, CSS va JS; pushti-gulli uslub) 5-bosqichdan keyin, tarjimadan oldin qilinmoqda: barcha sahifalar tayyor (kirish, bosh sahifa, kirimlar, chiqimlar, hisoblar, turlar, valyutalar, profil).
@@ -196,7 +194,7 @@ Har bosqich alohida tasdiqlanadi va tasdiqlangandan keyingina keyingisiga o'tila
 ## Papkalar
 
 - `config/` : loyihaning umumiy sozlamalari (`settings.py`: JWT va Swagger sozlamalari ham shu yerda, asosiy `urls.py`)
-- `finance/` : asosiy ilova (modellar, serializer'lar, view'lar, ruxsatlar, testlar, admin)
+- `finance/` : asosiy ilova (modellar, serializer'lar, view'lar, ruxsatlar, admin)
 - `finance/templates/`, `finance/static/` : frontend (HTML shablonlar, CSS, JS)
 - `locale/` : API xabarlarining tarjimasi (ru, en; o'zbekcha asosiy til)
 - `requirements.txt` : kerakli paketlar ro'yxati

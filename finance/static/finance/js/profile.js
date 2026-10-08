@@ -1,4 +1,4 @@
-// Profil sahifasi
+
 
 initApp().then((user) => {
   if (!user) return;

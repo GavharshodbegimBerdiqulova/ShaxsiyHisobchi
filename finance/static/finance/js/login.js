@@ -1,4 +1,4 @@
-// Login va ro'yxatdan o'tish sahifasi
+
 
 if (isLoggedIn()) {
   window.location.href = "/";
@@ -7,7 +7,7 @@ if (isLoggedIn()) {
 const loginForm = document.getElementById("login-form");
 const registerForm = document.getElementById("register-form");
 
-// Tablarni almashtirish
+
 document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
@@ -19,7 +19,7 @@ document.querySelectorAll(".tab").forEach((tab) => {
   });
 });
 
-// Formani yuborish: muvaffaqiyatli bo'lsa tokenlarni saqlab, bosh sahifaga o'tadi
+
 async function submitForm(form, url) {
   const errorBox = form.querySelector(".form-error");
   errorBox.hidden = true;

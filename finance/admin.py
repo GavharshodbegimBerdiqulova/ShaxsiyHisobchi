@@ -8,8 +8,6 @@ from django.utils.translation import gettext_lazy as _
 from .models import Account, Currency, Expense, ExpenseType, Income, IncomeType
 
 
-# ---------- Foydalanuvchi (email takrorlanmasligi uchun) ----------
-
 class UniqueEmailMixin:
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -45,8 +43,6 @@ class MyUserAdmin(UserAdmin):
     )
     list_display = ("username", "email", "is_staff", "is_superuser")
 
-
-# ---------- Asosiy jadvallar ----------
 
 @admin.register(Currency)
 class CurrencyAdmin(admin.ModelAdmin):

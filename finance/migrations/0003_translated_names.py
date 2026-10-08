@@ -2,7 +2,6 @@ from django.db import migrations, models
 
 
 def copy_uz_name(apps, schema_editor):
-    # Eski yozuvlarda ruscha va inglizcha nom o'zbekchadan nusxalanadi
     for model_name in ("Currency", "Account", "ExpenseType", "IncomeType"):
         Model = apps.get_model("finance", model_name)
         for obj in Model.objects.all():

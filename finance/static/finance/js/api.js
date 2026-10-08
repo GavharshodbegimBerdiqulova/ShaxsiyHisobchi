@@ -1,4 +1,4 @@
-// API bilan ishlash uchun umumiy funksiyalar
+
 
 const ACCESS_KEY = "access";
 const REFRESH_KEY = "refresh";
@@ -19,14 +19,14 @@ function isLoggedIn() {
   return !!localStorage.getItem(ACCESS_KEY);
 }
 
-// Kirmagan foydalanuvchini login sahifasiga yuboradi
+
 function requireLogin() {
   if (!isLoggedIn()) {
     window.location.href = "/login/";
   }
 }
 
-// access tokenning muddati tugasa, refresh orqali yangisini oladi
+
 async function refreshAccess() {
   const refresh = localStorage.getItem(REFRESH_KEY);
   if (!refresh) return false;
@@ -42,10 +42,10 @@ async function refreshAccess() {
   return true;
 }
 
-// Token bilan so'rov yuboradi. Natija: { ok, status, data }
+
 async function api(url, method = "GET", body = null) {
   async function send() {
-    // Accept-Language: server xabarlari tanlangan tilda qaytadi
+
     const headers = { "Content-Type": "application/json", "Accept-Language": getLang() };
     const access = localStorage.getItem(ACCESS_KEY);
     if (access) headers["Authorization"] = "Bearer " + access;
@@ -74,7 +74,7 @@ async function api(url, method = "GET", body = null) {
   return { ok: response.ok, status: response.status, data: data };
 }
 
-// API xatolarini bitta matnga aylantiradi
+
 function errorText(data) {
   if (!data) return t("common.error");
   if (typeof data === "string") return data;
@@ -88,7 +88,7 @@ function errorText(data) {
   return parts.join(" ");
 }
 
-// Pastda chiqadigan kichik xabar
+
 function showToast(text) {
   const toast = document.getElementById("toast");
   toast.textContent = text;
@@ -96,7 +96,7 @@ function showToast(text) {
   setTimeout(() => { toast.hidden = true; }, 3000);
 }
 
-// Tizimdan chiqish tugmasi (agar sahifada bo'lsa)
+
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("logout-btn");
   if (!button) return;

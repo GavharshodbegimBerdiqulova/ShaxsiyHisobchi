@@ -13,7 +13,6 @@ NAME_FIELDS = ["name_uz", "name_ru", "name_en"]
 
 
 def check_unique_names(model, owner, data, instance, message):
-    # Bir foydalanuvchida har bir tilda bir xil nom ikki marta bo'lmasin
     errors = {}
     for field in NAME_FIELDS:
         value = data.get(field)
@@ -29,14 +28,12 @@ def check_unique_names(model, owner, data, instance, message):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # Profil uchun: foydalanuvchi ma'lumoti
     class Meta:
         model = User
         fields = ["id", "username", "email", "first_name", "last_name", "is_superuser"]
         read_only_fields = ["username", "is_superuser"]
 
     def validate_email(self, value):
-        # Email takrorlanmasin (katta-kichik harf farqi yo'q)
         users = User.objects.filter(email__iexact=value)
         if self.instance:
             users = users.exclude(pk=self.instance.pk)
@@ -46,7 +43,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserAdminSerializer(serializers.ModelSerializer):
-    # Superadmin uchun: foydalanuvchi va uning yozuvlari soni
     accounts_count = serializers.IntegerField(read_only=True)
     incomes_count = serializers.IntegerField(read_only=True)
     expenses_count = serializers.IntegerField(read_only=True)
@@ -81,12 +77,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop("password2")
-        # create_user parolni hash qilib saqlaydi
         return User.objects.create_user(**validated_data)
 
 
 class LoginSerializer(serializers.Serializer):
-    # login maydoniga username ham, email ham yozish mumkin
     login = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
@@ -108,7 +102,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 class CurrencySerializer(serializers.ModelSerializer):
-    # name: so'rov tilidagi nom, name_uz / name_ru / name_en: tahrirlash uchun
     name = serializers.CharField(source="translated_name", read_only=True)
 
     class Meta:
@@ -132,10 +125,8 @@ class AccountSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.DecimalField(max_digits=16, decimal_places=2))
     def get_balance(self, obj):
-        # Joriy qoldiq = boshlang'ich summa + kirimlar - chiqimlar
         income = obj.incomes.aggregate(total=Sum("amount"))["total"] or 0
         expense = obj.expenses.aggregate(total=Sum("amount"))["total"] or 0
-        # summalar API'da matn ko'rinishida beriladi (amount kabi)
         return str(obj.initial_balance + income - expense)
 
     def validate_initial_balance(self, value):
@@ -200,7 +191,6 @@ class ExpenseSerializer(serializers.ModelSerializer):
         return value
 
     def validate_type(self, value):
-        # Foydalanuvchi boshqa odamning turini tanlay olmaydi
         user = self.context["request"].user
         if not user.is_superuser and value.owner != user:
             raise serializers.ValidationError(_("Bu tur sizga tegishli emas."))
@@ -243,7 +233,6 @@ class IncomeSerializer(serializers.ModelSerializer):
 
 
 class ReportSerializer(serializers.Serializer):
-    # Hisobot bazadagi jadval emas, shuning uchun oddiy Serializer
     period = serializers.CharField()
     currency = serializers.CharField()
     start_date = serializers.DateField()

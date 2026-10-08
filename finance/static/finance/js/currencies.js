@@ -1,4 +1,4 @@
-// Valyutalar sahifasi (faqat superadmin uchun)
+
 
 async function loadRows() {
   const result = await api("/api/currencies/");
@@ -47,7 +47,7 @@ function openForm(currency = null) {
 initApp().then((user) => {
   if (!user) return;
 
-  // Oddiy foydalanuvchi bu sahifaga kira olmaydi
+
   if (!user.is_superuser) {
     window.location.href = "/";
     return;

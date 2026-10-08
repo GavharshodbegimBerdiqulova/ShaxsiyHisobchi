@@ -1,4 +1,4 @@
-// Hisoblar sahifasi
+
 
 let currencies = [];
 

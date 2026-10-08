@@ -1,4 +1,4 @@
-// Kirgandan keyingi hamma sahifalar uchun umumiy funksiyalar
+
 
 requireLogin();
 
@@ -8,7 +8,7 @@ function $(id) {
   return document.getElementById(id);
 }
 
-// HTML element yasash (matn textContent bilan qo'yiladi, shuning uchun xavfsiz)
+
 function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
   for (const key in props) {
@@ -21,7 +21,7 @@ function el(tag, props = {}, ...children) {
   return node;
 }
 
-// 1500000 -> "1 500 000"
+
 function money(value) {
   return Number(value).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
 }
@@ -33,7 +33,7 @@ function today() {
   return d.getFullYear() + "-" + month + "-" + day;
 }
 
-// Sidebar, foydalanuvchi ma'lumoti va superadmin bo'limlarini tayyorlaydi
+
 async function initApp() {
   const result = await api("/api/auth/profile/");
   if (!result.ok) return null;
@@ -42,17 +42,17 @@ async function initApp() {
   $("side-username").textContent = currentUser.username;
   $("side-role").textContent = currentUser.is_superuser ? t("role.admin") : t("role.user");
 
-  // Superadmin bo'lsa, unga tegishli bo'limlar ko'rinadi
+
   if (currentUser.is_superuser) {
     document.querySelectorAll("[data-admin-only]").forEach((item) => { item.hidden = false; });
   }
 
-  // Hozirgi sahifa menyuda belgilanadi
+
   document.querySelectorAll(".side-links a").forEach((link) => {
     if (link.getAttribute("href") === window.location.pathname) link.classList.add("active");
   });
 
-  // Telefonda sidebar'ni ochish va yopish
+
   const sidebar = $("sidebar");
   const backdrop = $("backdrop");
   function toggleMenu(open) {
@@ -65,14 +65,12 @@ async function initApp() {
   return currentUser;
 }
 
-// ---------- Qo'shish / o'zgartirish oynasi ----------
 
 function closeModal() {
   $("modal").hidden = true;
 }
 
-// fields: [{ name, label, type, options, step, required }]
-// onSubmit(data) API natijasini ({ ok, data }) qaytarishi kerak
+
 function openModal({ title, fields, values = {}, onSubmit }) {
   const form = $("modal-form");
   $("modal-title").textContent = title;
@@ -121,12 +119,12 @@ function openModal({ title, fields, values = {}, onSubmit }) {
   $("modal").hidden = false;
 }
 
-// Oynadan tashqariga bosilsa yopiladi
+
 document.addEventListener("click", (event) => {
   if (event.target === $("modal")) closeModal();
 });
 
-// Nom 3 tilda kiritiladi: o'zbekcha, ruscha, inglizcha
+
 function nameFields() {
   return ["uz", "ru", "en"].map((lang) => ({
     name: "name_" + lang,
@@ -134,7 +132,6 @@ function nameFields() {
   }));
 }
 
-// ---------- O'chirish ----------
 
 async function deleteItem(url, question, reload) {
   if (!confirm(question)) return;
@@ -147,7 +144,7 @@ async function deleteItem(url, question, reload) {
   }
 }
 
-// Tahrirlash va o'chirish tugmalari
+
 function actionButtons(onEdit, onDelete) {
   return el(
     "div", { class: "actions" },
