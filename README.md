@@ -34,7 +34,7 @@ python manage.py runserver
 
 Server yurgandan keyin brauzerda oching:
 
-- http://127.0.0.1:8000/ : dastur sahifalari (pushti-gulli ko'rinish; kirish sahifasi `/login/`). Chap tomonda sidebar menyu bor.
+- http://127.0.0.1:8000/ : dastur sahifalari. Chap tomonda sidebar menyu bor.
 - http://127.0.0.1:8000/api/docs/ : Swagger. API'ni shu yerdan sinab ko'rish mumkin.
 - http://127.0.0.1:8000/admin/ : admin panel (superadmin login va paroli bilan kiriladi).
 
