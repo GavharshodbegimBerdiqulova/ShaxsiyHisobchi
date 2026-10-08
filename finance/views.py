@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
-from rest_framework import generics, status
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import generics, serializers, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,6 +11,28 @@ from .serializers import LoginSerializer, RegisterSerializer, UserSerializer
 
 
 # ---------- Auth ----------
+
+# Swagger'da javob ko'rinishini ko'rsatish uchun
+LoginResponseSerializer = inline_serializer(
+    "LoginResponse",
+    {
+        "access": serializers.CharField(),
+        "refresh": serializers.CharField(),
+        "user": UserSerializer(),
+    },
+)
+RegisterResponseSerializer = inline_serializer(
+    "RegisterResponse",
+    {
+        "id": serializers.IntegerField(),
+        "username": serializers.CharField(),
+        "email": serializers.EmailField(),
+        "access": serializers.CharField(),
+        "refresh": serializers.CharField(),
+    },
+)
+RefreshBodySerializer = inline_serializer("RefreshBody", {"refresh": serializers.CharField()})
+
 
 def get_tokens(user):
     # Foydalanuvchi uchun access va refresh token yaratadi
@@ -22,6 +45,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
+    @extend_schema(responses={201: RegisterResponseSerializer})
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -35,6 +59,7 @@ class LoginView(APIView):
     # login (username yoki email) va parol bersa, access va refresh token qaytaradi
     permission_classes = [AllowAny]
 
+    @extend_schema(request=LoginSerializer, responses={200: LoginResponseSerializer})
     def post(self, request):
         serializer = LoginSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
@@ -46,6 +71,7 @@ class LoginView(APIView):
 
 class LogoutView(APIView):
     # refresh token blacklist'ga qo'shiladi, shundan keyin u ishlamaydi
+    @extend_schema(request=RefreshBodySerializer, responses={200: None})
     def post(self, request):
         try:
             RefreshToken(request.data.get("refresh")).blacklist()

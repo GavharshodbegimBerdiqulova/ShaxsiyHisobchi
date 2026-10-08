@@ -51,6 +51,15 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 
 **Ruxsatlar:** oddiy foydalanuvchi faqat o'z yozuvlarini o'zgartira oladi, superadmin hammasini. Valyutalarni hamma ko'ra oladi, o'zgartirishni faqat superadmin qiladi.
 
+## API hujjati (Swagger)
+
+Serverni yurgizgandan keyin brauzerda oching:
+
+- http://127.0.0.1:8000/api/docs/ : Swagger. Endpoint'larni shu yerdan sinab ko'rish mumkin.
+- http://127.0.0.1:8000/api/schema/ : API sxemasi (fayl ko'rinishida).
+
+Himoyalangan endpoint'larni sinash uchun: avval `login` ni ishga tushiring, javobdagi `access` ni nusxalang, sahifa tepasidagi **Authorize** tugmasini bosib, `jwtAuth` maydoniga joylang.
+
 ## Ishlash rejasi va holati
 
 | № | Bosqich | Holati |
@@ -58,7 +67,8 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 | 1 | Loyiha skeleti va sozlamalar | Tayyor |
 | 2 | Modellar (jadvallar) | Tayyor |
 | 3 | Serializer'lar (ma'lumotni tekshirish va API formatiga o'tkazish) | Tayyor |
-| 3.5 | Kirish tizimi (register, login, logout, profil, ruxsatlar) | Tayyor |
+| 3.5 | Kirish tizimi (JWT: register, login, token yangilash, logout, profil, ruxsatlar) | Tayyor |
+| 3.6 | Swagger (API hujjati) | Tayyor |
 | 4 | View'lar (API amallari va hisobotlar) | Kutilmoqda |
 | 5 | Admin panel va URL manzillar | Kutilmoqda |
 | 6 | 3 tilga tarjima | Kutilmoqda |
@@ -75,6 +85,7 @@ Har bosqich alohida tasdiqlanadi va tasdiqlangandan keyingina keyingisiga o'tila
 - Django 6.1 (asosiy freymvork)
 - Django REST Framework (API uchun)
 - Simple JWT (kirish tokenlari uchun)
+- drf-spectacular (Swagger hujjati uchun)
 - SQLite (ma'lumotlar bazasi, hozircha)
 
 ## Loyihani ishga tushirish
@@ -98,11 +109,13 @@ python manage.py runserver
 
 Admin panel: http://127.0.0.1:8000/admin/ (5-bosqichdan keyin ishlaydi)
 
+Swagger: http://127.0.0.1:8000/api/docs/
+
 Testlarni yurgizish: `python manage.py test`
 
 ## Papkalar
 
-- `config/` : loyihaning umumiy sozlamalari (`settings.py`, asosiy `urls.py`)
+- `config/` : loyihaning umumiy sozlamalari (`settings.py`: JWT va Swagger sozlamalari ham shu yerda, asosiy `urls.py`)
 - `finance/` : asosiy ilova (modellar, serializer'lar, view'lar, ruxsatlar, testlar, admin)
 - `locale/` : tarjima fayllari (uz, ru, en)
 - `requirements.txt` : kerakli paketlar ro'yxati

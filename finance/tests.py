@@ -93,3 +93,10 @@ class AuthTest(TestCase):
         # o'z emailini qayta yuborsa xato bo'lmaydi, boshqaning emailini yuborsa xato
         self.assertEqual(self.client.patch("/api/auth/profile/", {"email": "vali@test.uz"}).status_code, 200)
         self.assertEqual(self.client.patch("/api/auth/profile/", {"email": "ali@test.uz"}).status_code, 400)
+
+
+class SwaggerTest(TestCase):
+    def test_docs_open(self):
+        client = APIClient()
+        self.assertEqual(client.get("/api/docs/").status_code, 200)
+        self.assertEqual(client.get("/api/schema/").status_code, 200)
