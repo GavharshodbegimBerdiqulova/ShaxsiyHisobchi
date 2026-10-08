@@ -1,0 +1,28 @@
+{% extends "finance/base_app.html" %}
+{% load static %}
+
+{% block page %}
+<div class="two-cols">
+  <section class="card type-box" data-kind="income">
+    <div class="section-head">
+      <h2 data-i18n="type.income_title">Kirim turlari 💰</h2>
+      <button type="button" class="btn btn-small add-type" data-i18n="common.add">+ Qo'shish</button>
+    </div>
+    <ul class="list type-list"></ul>
+    <p class="empty" hidden data-i18n="type.empty">Hali tur yo'q 🌸</p>
+  </section>
+
+  <section class="card type-box" data-kind="expense">
+    <div class="section-head">
+      <h2 data-i18n="type.expense_title">Chiqim turlari 🛍️</h2>
+      <button type="button" class="btn btn-small add-type" data-i18n="common.add">+ Qo'shish</button>
+    </div>
+    <ul class="list type-list"></ul>
+    <p class="empty" hidden data-i18n="type.empty">Hali tur yo'q 🌸</p>
+  </section>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'finance/js/types.js' %}"></script>
+{% endblock %}

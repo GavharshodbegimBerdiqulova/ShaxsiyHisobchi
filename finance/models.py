@@ -1,11 +1,26 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _
 
 
-class Currency(models.Model):
+class TranslatedName(models.Model):
+    # Nomi 3 tilda saqlanadigan jadvallar uchun umumiy qism
+    name_uz = models.CharField(_("Nomi (UZ)"), max_length=100)
+    name_ru = models.CharField(_("Nomi (RU)"), max_length=100)
+    name_en = models.CharField(_("Nomi (EN)"), max_length=100)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def translated_name(self):
+        # So'rov tilidagi nom; u bo'sh bo'lsa o'zbekcha nom
+        language = (get_language() or "uz")[:2]
+        return getattr(self, "name_" + language, "") or self.name_uz
+
+
+class Currency(TranslatedName):
     # Valyutalar hamma uchun umumiy, ularni faqat superadmin qo'shadi
-    name = models.CharField(_("Nomi"), max_length=50)
     code = models.CharField(_("Kodi"), max_length=10, unique=True)
 
     class Meta:
@@ -16,12 +31,11 @@ class Currency(models.Model):
         return self.code
 
 
-class Account(models.Model):
+class Account(TranslatedName):
     # Hisob: Naqd pul, Karta va hokazo
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="accounts", verbose_name=_("Egasi")
     )
-    name = models.CharField(_("Nomi"), max_length=100)
     currency = models.ForeignKey(
         Currency, on_delete=models.PROTECT, related_name="accounts", verbose_name=_("Valyuta")
     )
@@ -33,42 +47,40 @@ class Account(models.Model):
     class Meta:
         verbose_name = _("Hisob")
         verbose_name_plural = _("Hisoblar")
-        unique_together = ("owner", "name")
+        unique_together = ("owner", "name_uz")
 
     def __str__(self):
-        return f"{self.name} ({self.currency})"
+        return f"{self.translated_name} ({self.currency})"
 
 
-class ExpenseType(models.Model):
+class ExpenseType(TranslatedName):
     # Chiqim turi: Yo'lkira, Tushlik, Salomatlik
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="expense_types", verbose_name=_("Egasi")
     )
-    name = models.CharField(_("Nomi"), max_length=100)
 
     class Meta:
         verbose_name = _("Chiqim turi")
         verbose_name_plural = _("Chiqim turlari")
-        unique_together = ("owner", "name")
+        unique_together = ("owner", "name_uz")
 
     def __str__(self):
-        return self.name
+        return self.translated_name
 
 
-class IncomeType(models.Model):
+class IncomeType(TranslatedName):
     # Kirim turi: Oylik, Avans, Kunlik ish haqi
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="income_types", verbose_name=_("Egasi")
     )
-    name = models.CharField(_("Nomi"), max_length=100)
 
     class Meta:
         verbose_name = _("Kirim turi")
         verbose_name_plural = _("Kirim turlari")
-        unique_together = ("owner", "name")
+        unique_together = ("owner", "name_uz")
 
     def __str__(self):
-        return self.name
+        return self.translated_name
 
 
 class Expense(models.Model):

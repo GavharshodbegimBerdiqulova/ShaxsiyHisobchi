@@ -1,0 +1,97 @@
+{% extends "finance/base_app.html" %}
+{% load static %}
+
+{% block page_actions %}
+<a class="btn btn-light" href="/users/" data-i18n="users.back">← Foydalanuvchilar</a>
+{% endblock %}
+
+{% block page %}
+<section class="card">
+  <div class="user-head">
+    <div class="side-avatar big">🌸</div>
+    <div>
+      <h2 id="u-username">...</h2>
+      <div class="muted" id="u-info"></div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-head">
+    <h2 data-i18n="dash.report">Hisobot</h2>
+    <div class="tabs tabs-inline" id="period-tabs">
+      <button type="button" class="tab active" data-period="day" data-i18n="dash.day">Kun</button>
+      <button type="button" class="tab" data-period="week" data-i18n="dash.week">Hafta</button>
+      <button type="button" class="tab" data-period="month" data-i18n="dash.month">Oy</button>
+    </div>
+  </div>
+  <p class="muted" id="report-range"></p>
+  <div id="report"></div>
+</section>
+
+<section class="card">
+  <h2 data-i18n="ud.accounts">Hisoblar 👛</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th data-i18n="common.name">Nomi</th>
+          <th data-i18n="common.currency">Valyuta</th>
+          <th class="right" data-i18n="acc.initial">Boshlang'ich summa</th>
+          <th class="right" data-i18n="acc.balance">Joriy qoldiq</th>
+        </tr>
+      </thead>
+      <tbody id="accounts-rows"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="accounts-empty" hidden data-i18n="acc.empty">Hali hisob yo'q 🌸</p>
+  <div id="totals" class="totals"></div>
+</section>
+
+<div class="two-cols">
+  <section class="card">
+    <h2 data-i18n="type.income_title">Kirim turlari 💰</h2>
+    <ul class="list" id="income-types"></ul>
+  </section>
+  <section class="card">
+    <h2 data-i18n="type.expense_title">Chiqim turlari 🛍️</h2>
+    <ul class="list" id="expense-types"></ul>
+  </section>
+</div>
+
+<section class="card">
+  <h2 data-i18n="ud.incomes">Kirimlar 💰</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th data-i18n="common.date">Sana</th><th data-i18n="common.type">Tur</th>
+          <th data-i18n="common.account">Hisob</th><th class="right" data-i18n="common.amount">Summa</th>
+        </tr>
+      </thead>
+      <tbody id="income-rows"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="income-empty" hidden data-i18n="common.no_records">Hali yozuv yo'q 🌸</p>
+</section>
+
+<section class="card">
+  <h2 data-i18n="ud.expenses">Chiqimlar 🛍️</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th data-i18n="common.date">Sana</th><th data-i18n="common.type">Tur</th>
+          <th data-i18n="common.account">Hisob</th><th class="right" data-i18n="common.amount">Summa</th>
+        </tr>
+      </thead>
+      <tbody id="expense-rows"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="expense-empty" hidden data-i18n="common.no_records">Hali yozuv yo'q 🌸</p>
+</section>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'finance/js/user_detail.js' %}"></script>
+{% endblock %}

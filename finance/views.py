@@ -1,7 +1,8 @@
 import calendar
 from datetime import date, timedelta
 
-from django.db.models import ProtectedError, Sum
+from django.contrib.auth.models import User
+from django.db.models import Count, ProtectedError, Sum
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, inline_serializer
@@ -13,11 +14,11 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Account, Currency, Expense, ExpenseType, Income, IncomeType
-from .permissions import IsOwnerOrSuperuser, IsSuperuserOrReadOnly
+from .permissions import IsOwnerOrSuperuser, IsSuperuser, IsSuperuserOrReadOnly
 from .serializers import (
     AccountSerializer, CurrencySerializer, ExpenseSerializer, ExpenseTypeSerializer,
     IncomeSerializer, IncomeTypeSerializer, LoginSerializer, RegisterSerializer,
-    ReportSerializer, UserSerializer,
+    ReportSerializer, UserAdminSerializer, UserSerializer,
 )
 
 
@@ -114,9 +115,13 @@ class OwnerViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.is_superuser:
-            return queryset
-        return queryset.filter(owner=self.request.user)
+        if not self.request.user.is_superuser:
+            queryset = queryset.filter(owner=self.request.user)
+        # Superadmin ?owner=<id> bilan bitta foydalanuvchining yozuvlarini ko'ra oladi
+        owner = self.request.query_params.get("owner")
+        if owner and owner.isdigit():
+            queryset = queryset.filter(owner_id=owner)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -148,17 +153,17 @@ class CurrencyViewSet(viewsets.ModelViewSet):
 
 
 class AccountViewSet(OwnerViewSet):
-    queryset = Account.objects.select_related("currency")
+    queryset = Account.objects.select_related("currency", "owner")
     serializer_class = AccountSerializer
 
 
 class ExpenseTypeViewSet(OwnerViewSet):
-    queryset = ExpenseType.objects.all()
+    queryset = ExpenseType.objects.select_related("owner")
     serializer_class = ExpenseTypeSerializer
 
 
 class IncomeTypeViewSet(OwnerViewSet):
-    queryset = IncomeType.objects.all()
+    queryset = IncomeType.objects.select_related("owner")
     serializer_class = IncomeTypeSerializer
 
 
@@ -176,7 +181,7 @@ def filter_by_params(queryset, params):
 
 
 class ExpenseViewSet(OwnerViewSet):
-    queryset = Expense.objects.select_related("type", "account")
+    queryset = Expense.objects.select_related("type", "account", "owner")
     serializer_class = ExpenseSerializer
 
     def get_queryset(self):
@@ -184,11 +189,23 @@ class ExpenseViewSet(OwnerViewSet):
 
 
 class IncomeViewSet(OwnerViewSet):
-    queryset = Income.objects.select_related("type", "account")
+    queryset = Income.objects.select_related("type", "account", "owner")
     serializer_class = IncomeSerializer
 
     def get_queryset(self):
         return filter_by_params(super().get_queryset(), self.request.query_params)
+
+
+# ---------- Foydalanuvchilar (faqat superadmin) ----------
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.annotate(
+        accounts_count=Count("accounts", distinct=True),
+        incomes_count=Count("incomes", distinct=True),
+        expenses_count=Count("expenses", distinct=True),
+    ).order_by("id")
+    serializer_class = UserAdminSerializer
+    permission_classes = [IsSuperuser]
 
 
 # ---------- Hisobot ----------
@@ -214,6 +231,7 @@ class ReportView(APIView):
         parameters=[
             OpenApiParameter("period", str, enum=["day", "week", "month"], description="Davr"),
             OpenApiParameter("date", OpenApiTypes.DATE, description="Qaysi kun (YYYY-MM-DD)"),
+            OpenApiParameter("user", int, description="Foydalanuvchi id (faqat superadmin uchun)"),
         ],
         responses=ReportSerializer(many=True),
     )
@@ -244,6 +262,12 @@ class ReportView(APIView):
         if not request.user.is_superuser:
             incomes = incomes.filter(owner=request.user)
             expenses = expenses.filter(owner=request.user)
+        else:
+            # Superadmin ?user=<id> bilan bitta foydalanuvchining hisobotini ko'radi
+            user_id = request.query_params.get("user")
+            if user_id and user_id.isdigit():
+                incomes = incomes.filter(owner_id=user_id)
+                expenses = expenses.filter(owner_id=user_id)
 
         # valyuta kodi bo'yicha jami summalar
         income_sums = incomes.values("account__currency__code").annotate(total=Sum("amount"))

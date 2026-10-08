@@ -1,0 +1,31 @@
+{% extends "finance/base_app.html" %}
+{% load static %}
+
+{% block page_actions %}
+<button type="button" class="btn" id="add-btn" data-i18n="cur.add">+ Valyuta qo'shish</button>
+{% endblock %}
+
+{% block page %}
+<section class="card">
+  <p class="muted" data-i18n="cur.info">Valyutalarni faqat superadmin boshqaradi. Foydalanuvchilar hisob ochganda shu ro'yxatdan tanlaydi.</p>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th data-i18n="cur.code">Kodi</th>
+          <th>UZ</th>
+          <th>RU</th>
+          <th>EN</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="empty" hidden data-i18n="cur.empty">Hali valyuta yo'q. Masalan UZS ni qo'shing 🌸</p>
+</section>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'finance/js/currencies.js' %}"></script>
+{% endblock %}

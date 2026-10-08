@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShaxsiyHisobchi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'finance/css/style.css' %}">
+</head>
+<body class="{% block body_class %}{% endblock %}" data-page="{{ page_key }}">
+
+  {# Gul rasmi: bir marta yoziladi, keyin hamma joyda <use> bilan ishlatiladi #}
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="flower" viewBox="0 0 100 100">
+      <g fill="currentColor" opacity="0.9">
+        <circle cx="50" cy="22" r="16"/>
+        <circle cx="50" cy="78" r="16"/>
+        <circle cx="22" cy="50" r="16"/>
+        <circle cx="78" cy="50" r="16"/>
+        <circle cx="30" cy="30" r="14"/>
+        <circle cx="70" cy="30" r="14"/>
+        <circle cx="30" cy="70" r="14"/>
+        <circle cx="70" cy="70" r="14"/>
+      </g>
+      <circle cx="50" cy="50" r="13" fill="#ffd6a5"/>
+    </symbol>
+  </svg>
+
+  <svg class="decor decor-1"><use href="#flower"/></svg>
+  <svg class="decor decor-2"><use href="#flower"/></svg>
+  <svg class="decor decor-3"><use href="#flower"/></svg>
+
+  {% block nav %}{% endblock %}
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="{% static 'finance/js/i18n.js' %}"></script>
+  <script src="{% static 'finance/js/api.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

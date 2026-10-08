@@ -1,0 +1,421 @@
+/* ShaxsiyHisobchi: pushti-gulli uslub */
+
+:root {
+  --bg: #fff0f6;
+  --card: #ffffff;
+  --pink: #e75480;
+  --pink-dark: #c93d68;
+  --pink-light: #ffd9e6;
+  --lavender: #e9ddff;
+  --peach: #ffe4d1;
+  --text: #5a3a47;
+  --muted: #a07f8d;
+  --income: #3fae8c;
+  --expense: #e0436f;
+  --shadow: 0 8px 24px rgba(231, 84, 128, 0.15);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Quicksand", "Segoe UI", sans-serif;
+  color: var(--text);
+  background: linear-gradient(160deg, var(--bg) 0%, #ffe8f1 50%, var(--lavender) 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ---------- Gul bezaklari ---------- */
+.decor {
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+}
+.decor-1 { width: 220px; height: 220px; top: -60px; left: -60px; color: var(--pink-light); }
+.decor-2 { width: 160px; height: 160px; bottom: 40px; right: -40px; color: #f7c6dc; }
+.decor-3 { width: 110px; height: 110px; bottom: -30px; left: 12%; color: var(--lavender); }
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* ---------- Kartochka ---------- */
+.card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--pink-light);
+  margin-bottom: 20px;
+}
+
+h1, h2, h3 { margin-top: 0; color: var(--pink-dark); }
+.muted { color: var(--muted); }
+
+/* ---------- Tugmalar ---------- */
+.btn {
+  background: linear-gradient(135deg, #f78fb3, var(--pink));
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(231, 84, 128, 0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(231, 84, 128, 0.35); }
+.btn-small { padding: 8px 16px; font-size: 0.9rem; }
+.btn-light { background: var(--pink-light); color: var(--pink-dark); box-shadow: none; }
+
+/* ---------- Formalar ---------- */
+.form { display: flex; flex-direction: column; gap: 14px; }
+.form[hidden] { display: none; }
+
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 0.95rem; }
+
+input, select {
+  font: inherit;
+  padding: 12px 16px;
+  border: 2px solid var(--pink-light);
+  border-radius: 14px;
+  background: #fffafc;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+input:focus, select:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 4px rgba(231, 84, 128, 0.15);
+}
+
+.form-error {
+  margin: 0;
+  padding: 10px 14px;
+  background: #ffe3ea;
+  color: var(--expense);
+  border-radius: 12px;
+  font-weight: 600;
+}
+.form-error[hidden] { display: none; }
+
+/* ---------- Kirish sahifasi ---------- */
+.auth-page .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+.auth-card { width: 100%; max-width: 420px; text-align: center; }
+.auth-card .form { text-align: left; }
+.logo { font-size: 1.8rem; margin-bottom: 4px; }
+.subtitle { margin: 0 0 20px; color: var(--muted); }
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--pink-light);
+  padding: 5px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+.tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--pink-dark);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tab.active { background: #fff; box-shadow: 0 2px 8px rgba(231, 84, 128, 0.2); }
+
+/* ---------- Yuqori menyu ---------- */
+.nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 24px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid var(--pink-light);
+}
+.nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--pink-dark); text-decoration: none; }
+.nav-links { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.nav-links a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+.nav-links a:hover, .nav-links a.active { background: var(--pink-light); color: var(--pink-dark); }
+
+/* ---------- Kichik xabar ---------- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--pink-dark);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  z-index: 10;
+  font-weight: 600;
+}
+.toast[hidden] { display: none; }
+
+@media (max-width: 600px) {
+  .card { padding: 18px; border-radius: 20px; }
+  .nav { padding: 12px 16px; }
+}
+
+/* =====================================================
+   Kirgandan keyingi sahifalar: sidebar va umumiy qolip
+   ===================================================== */
+
+.small { font-size: 0.85rem; }
+.right { text-align: right; }
+
+.app-page .container { max-width: none; margin-left: 260px; padding: 24px 28px 60px; }
+.app-page .navbar { margin-left: 260px; }
+
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 260px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-right: 2px solid var(--pink-light);
+  overflow-y: auto;
+}
+.side-logo { font-weight: 700; font-size: 1.25rem; color: var(--pink-dark); text-decoration: none; padding: 4px 10px; }
+.side-links { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.side-links a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  padding: 12px 14px;
+  border-radius: 16px;
+  transition: background 0.15s, transform 0.15s;
+}
+.side-links a:hover { background: var(--pink-light); transform: translateX(3px); }
+.side-links a.active { background: linear-gradient(135deg, #f78fb3, var(--pink)); color: #fff; box-shadow: 0 4px 12px rgba(231, 84, 128, 0.3); }
+.side-links a[hidden], .side-divider[hidden] { display: none; }
+.side-divider {
+  margin: 14px 10px 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.side-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 16px;
+}
+.side-avatar {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--pink-light);
+  font-size: 1.3rem;
+}
+
+.backdrop { position: fixed; inset: 0; background: rgba(90, 58, 71, 0.35); z-index: 4; }
+.backdrop[hidden] { display: none; }
+
+.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.topbar h1 { margin: 0; flex: 1; }
+.menu-btn {
+  display: none;
+  flex-shrink: 0;
+  border: none;
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 1.3rem;
+  color: var(--pink-dark);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.section-head h2 { margin: 0; }
+.tabs-inline { margin-bottom: 0; }
+.tabs-inline .tab { padding: 8px 18px; }
+
+.narrow { max-width: 480px; }
+.two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.two-cols .card { margin-bottom: 0; }
+.two-cols + .card, .card + .two-cols { margin-top: 20px; }
+
+.empty { color: var(--muted); text-align: center; padding: 14px 0; margin: 0; }
+.empty[hidden] { display: none; }
+
+/* ---------- Hisobot kartochkalari ---------- */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 12px; }
+.stat { border-radius: 20px; padding: 16px 18px; }
+.stat-label { font-weight: 600; color: var(--muted); }
+.stat-value { font-size: 1.35rem; font-weight: 700; margin-top: 4px; word-break: break-word; }
+.stat-income { background: #e6f7f1; } .stat-income .stat-value { color: var(--income); }
+.stat-expense { background: #ffe8ee; } .stat-expense .stat-value { color: var(--expense); }
+.stat-balance { background: var(--lavender); } .stat-balance .stat-value { color: #7a5ac7; }
+
+/* ---------- Hisob kartochkalari ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+.account-card {
+  background: linear-gradient(135deg, var(--peach), var(--pink-light));
+  border-radius: 20px;
+  padding: 18px;
+}
+.account-name { font-weight: 700; }
+.account-balance { font-size: 1.3rem; font-weight: 700; color: var(--pink-dark); margin-top: 6px; }
+
+/* ---------- Ro'yxat ---------- */
+.list { list-style: none; margin: 0; padding: 0; }
+.list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 4px;
+  border-bottom: 1px dashed var(--pink-light);
+}
+.list li:last-child { border-bottom: none; }
+.amount { font-weight: 700; }
+.amount-income { color: var(--income); }
+.amount-expense { color: var(--expense); }
+
+/* ---------- Jadval ---------- */
+.table-wrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; }
+.table th { text-align: left; color: var(--muted); font-size: 0.85rem; padding: 10px 12px; border-bottom: 2px solid var(--pink-light); white-space: nowrap; }
+.table th.right { text-align: right; }
+.table td { padding: 12px; border-bottom: 1px dashed var(--pink-light); }
+.table tr:hover td { background: #fff7fa; }
+.table [hidden] { display: none; }
+
+.actions { display: flex; gap: 4px; justify-content: flex-end; }
+.icon-btn { border: none; background: transparent; font-size: 1.1rem; cursor: pointer; padding: 6px; border-radius: 10px; }
+.icon-btn:hover { background: var(--pink-light); }
+
+/* ---------- Filtrlar ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
+.filters label { font-size: 0.85rem; }
+.filters input, .filters select { padding: 8px 12px; }
+
+/* ---------- Oyna (modal) ---------- */
+.modal {
+  position: fixed; inset: 0;
+  z-index: 8;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  background: rgba(90, 58, 71, 0.4);
+}
+.modal[hidden] { display: none; }
+.modal-box { width: 100%; max-width: 440px; margin: 0; max-height: 90vh; overflow-y: auto; }
+.modal-buttons { display: flex; gap: 10px; }
+.modal-buttons .btn { flex: 1; }
+
+/* ---------- Telefon ---------- */
+@media (max-width: 900px) {
+  .app-page .container { margin-left: 0; padding: 16px 14px 60px; }
+  .sidebar { transform: translateX(-100%); transition: transform 0.25s; box-shadow: var(--shadow); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-btn { display: block; }
+  .two-cols { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- Navbar (tepada): til almashtirgich va foydalanuvchi ---------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 28px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--pink-light);
+}
+.navbar-logo { display: none; font-weight: 700; color: var(--pink-dark); text-decoration: none; }
+.navbar-space { flex: 1; }
+.navbar-user { display: flex; align-items: center; gap: 10px; }
+.navbar-user-text { line-height: 1.2; }
+
+.lang-switch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--pink-light);
+  border-radius: 999px;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--pink-dark);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.lang-btn:hover { background: rgba(255, 255, 255, 0.6); }
+.lang-btn.active { background: #fff; box-shadow: 0 2px 8px rgba(231, 84, 128, 0.25); }
+
+.auth-lang { position: fixed; top: 16px; right: 16px; z-index: 3; }
+
+@media (max-width: 900px) {
+  .app-page .navbar { margin-left: 0; padding: 10px 14px; gap: 8px; }
+  .navbar-logo { display: block; }
+  .navbar-user-text, .navbar-user .side-avatar { display: none; }
+}
+
+
+/* ---------- Foydalanuvchilar sahifasi (superadmin) ---------- */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--lavender);
+  color: #7a5ac7;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.user-head { display: flex; align-items: center; gap: 16px; }
+.user-head h2 { margin: 0 0 4px; }
+.side-avatar.big { width: 64px; height: 64px; font-size: 2rem; flex-shrink: 0; }
+.totals { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.total-chip { background: var(--lavender); color: #5a3f9c; padding: 8px 16px; border-radius: 999px; font-weight: 700; }
+a.btn { text-decoration: none; display: inline-block; }

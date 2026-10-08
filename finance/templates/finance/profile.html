@@ -1,0 +1,27 @@
+{% extends "finance/base_app.html" %}
+{% load static %}
+
+{% block page %}
+<section class="card narrow">
+  <form id="profile-form" class="form">
+    <label><span data-i18n="login.username">Username</span>
+      <input type="text" name="username" disabled>
+    </label>
+    <label><span data-i18n="prof.first">Ism</span>
+      <input type="text" name="first_name">
+    </label>
+    <label><span data-i18n="prof.last">Familiya</span>
+      <input type="text" name="last_name">
+    </label>
+    <label><span data-i18n="login.email">Email</span>
+      <input type="email" name="email" required>
+    </label>
+    <p class="form-error" hidden></p>
+    <button type="submit" class="btn" data-i18n="common.save">Saqlash 💖</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'finance/js/profile.js' %}"></script>
+{% endblock %}

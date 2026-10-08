@@ -1,0 +1,31 @@
+{% extends "finance/base_app.html" %}
+{% load static %}
+
+{% block page_actions %}
+<button type="button" class="btn" id="add-btn" data-i18n="acc.add">+ Hisob qo'shish</button>
+{% endblock %}
+
+{% block page %}
+<section class="card">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th data-i18n="common.name">Nomi</th>
+          <th data-i18n="common.currency">Valyuta</th>
+          <th class="right" data-i18n="acc.initial">Boshlang'ich summa</th>
+          <th class="right" data-i18n="acc.balance">Joriy qoldiq</th>
+          <th data-admin-only hidden data-i18n="common.owner">Egasi</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="empty" hidden data-i18n="acc.empty">Hali hisob yo'q. Birinchi hisobingizni qo'shing 🌸</p>
+</section>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'finance/js/accounts.js' %}"></script>
+{% endblock %}

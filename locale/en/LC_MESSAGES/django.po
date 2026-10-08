@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-08 11:37+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Bu email allaqachon band."
+msgstr "This email is already taken."
+
+#, fuzzy
+#| msgid "Nomi"
+msgid "Nomi (UZ)"
+msgstr "Name"
+
+#, fuzzy
+#| msgid "Nomi"
+msgid "Nomi (RU)"
+msgstr "Name"
+
+#, fuzzy
+#| msgid "Nomi"
+msgid "Nomi (EN)"
+msgstr "Name"
+
+msgid "Kodi"
+msgstr "Code"
+
+msgid "Valyuta"
+msgstr "Currency"
+
+msgid "Valyutalar"
+msgstr "Currencies"
+
+msgid "Egasi"
+msgstr "Owner"
+
+msgid "Boshlang'ich summa"
+msgstr "Initial amount"
+
+msgid "Hisob"
+msgstr "Account"
+
+msgid "Hisoblar"
+msgstr "Accounts"
+
+msgid "Chiqim turi"
+msgstr "Expense category"
+
+msgid "Chiqim turlari"
+msgstr "Expense categories"
+
+msgid "Kirim turi"
+msgstr "Income category"
+
+msgid "Kirim turlari"
+msgstr "Income categories"
+
+msgid "Turi"
+msgstr "Category"
+
+msgid "Summa"
+msgstr "Amount"
+
+msgid "Sana"
+msgstr "Date"
+
+msgid "Chiqim"
+msgstr "Expense"
+
+msgid "Chiqimlar"
+msgstr "Expenses"
+
+msgid "Kirim"
+msgstr "Income"
+
+msgid "Kirimlar"
+msgstr "Income"
+
+msgid "Parollar bir xil emas."
+msgstr "The passwords do not match."
+
+msgid "Login yoki parol noto'g'ri."
+msgstr "Incorrect login or password."
+
+msgid "Boshlang'ich summa manfiy bo'lmasligi kerak."
+msgstr "The initial amount cannot be negative."
+
+msgid "Bunday nomli hisob allaqachon bor."
+msgstr "An account with this name already exists."
+
+msgid "Bunday nomli chiqim turi allaqachon bor."
+msgstr "An expense category with this name already exists."
+
+msgid "Bunday nomli kirim turi allaqachon bor."
+msgstr "An income category with this name already exists."
+
+msgid "Summa 0 dan katta bo'lishi kerak."
+msgstr "The amount must be greater than 0."
+
+msgid "Bu tur sizga tegishli emas."
+msgstr "This category does not belong to you."
+
+msgid "Bu hisob sizga tegishli emas."
+msgstr "This account does not belong to you."
+
+msgid "Refresh token noto'g'ri yoki muddati o'tgan."
+msgstr "The refresh token is invalid or expired."
+
+msgid "Tizimdan chiqdingiz."
+msgstr "You have been logged out."
+
+msgid "Bu yozuv ishlatilmoqda, uni o'chirib bo'lmaydi."
+msgstr "This record is in use and cannot be deleted."
+
+msgid "Bu valyuta hisoblarda ishlatilmoqda, uni o'chirib bo'lmaydi."
+msgstr "This currency is used by accounts and cannot be deleted."
+
+msgid "Davr day, week yoki month bo'lishi kerak."
+msgstr "The period must be day, week or month."
+
+msgid "Sana YYYY-MM-DD ko'rinishida bo'lishi kerak."
+msgstr "The date must be in YYYY-MM-DD format."

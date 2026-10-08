@@ -11,6 +11,7 @@ router.register("expense-types", views.ExpenseTypeViewSet)
 router.register("income-types", views.IncomeTypeViewSet)
 router.register("expenses", views.ExpenseViewSet)
 router.register("incomes", views.IncomeViewSet)
+router.register("users", views.UserViewSet)
 
 urlpatterns = [
     path("auth/register/", views.RegisterView.as_view()),

@@ -1,0 +1,67 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+{% block body_class %}app-page{% endblock %}
+
+{# Kirgandan keyingi hamma sahifalar uchun umumiy qolip: chapda sidebar, tepada navbar #}
+{% block nav %}
+<div class="backdrop" id="backdrop" hidden></div>
+
+<aside class="sidebar" id="sidebar">
+  <a class="side-logo" href="/">🌸 ShaxsiyHisobchi</a>
+
+  <nav class="side-links">
+    <a href="/" data-i18n="nav.home">🏠 Bosh sahifa</a>
+    <a href="/incomes/" data-i18n="nav.incomes">💰 Kirimlar</a>
+    <a href="/expenses/" data-i18n="nav.expenses">🛍️ Chiqimlar</a>
+    <a href="/accounts/" data-i18n="nav.accounts">👛 Hisoblar</a>
+    <a href="/types/" data-i18n="nav.types">🏷️ Turlar</a>
+    <a href="/profile/" data-i18n="nav.profile">🌷 Profil</a>
+
+    {# Faqat superadmin uchun (JS ko'rsatadi) #}
+    <div class="side-divider" data-admin-only hidden data-i18n="nav.superadmin">Superadmin 👑</div>
+    <a href="/users/" data-admin-only hidden data-i18n="nav.users">👥 Foydalanuvchilar</a>
+    <a href="/currencies/" data-admin-only hidden data-i18n="nav.currencies">💱 Valyutalar</a>
+    <a href="/admin/" target="_blank" data-admin-only hidden data-i18n="nav.admin">⚙️ Admin panel</a>
+  </nav>
+</aside>
+
+<header class="navbar">
+  <button type="button" id="menu-btn" class="menu-btn" aria-label="Menu">☰</button>
+  <a class="navbar-logo" href="/">🌸 ShaxsiyHisobchi</a>
+  <div class="navbar-space"></div>
+
+  {% include "finance/lang_switch.html" %}
+
+  <div class="navbar-user">
+    <div class="side-avatar">🌸</div>
+    <div class="navbar-user-text">
+      <strong id="side-username">...</strong>
+      <div class="muted small" id="side-role"></div>
+    </div>
+  </div>
+  <button type="button" id="logout-btn" class="btn btn-small btn-light" data-i18n="nav.logout">Chiqish</button>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <h1 data-i18n="{{ page_key }}"></h1>
+  <div class="topbar-actions">{% block page_actions %}{% endblock %}</div>
+</div>
+
+{% block page %}{% endblock %}
+
+{# Qo'shish va o'zgartirish oynasi #}
+<div class="modal" id="modal" hidden>
+  <div class="card modal-box">
+    <h3 id="modal-title"></h3>
+    <form id="modal-form" class="form"></form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'finance/js/common.js' %}"></script>
+{% block page_scripts %}{% endblock %}
+{% endblock %}

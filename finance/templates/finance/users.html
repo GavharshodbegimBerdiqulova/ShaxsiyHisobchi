@@ -1,0 +1,29 @@
+{% extends "finance/base_app.html" %}
+{% load static %}
+
+{% block page %}
+<section class="card">
+  <p class="muted" data-i18n="users.info">Superadmin barcha foydalanuvchilarning ma'lumotini ko'ra oladi.</p>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th data-i18n="login.username">Username</th>
+          <th data-i18n="users.fullname">F.I.Sh.</th>
+          <th data-i18n="login.email">Email</th>
+          <th data-i18n="users.joined">Ro'yxatdan o'tgan</th>
+          <th class="right" data-i18n="users.accounts">Hisoblar</th>
+          <th class="right" data-i18n="users.incomes">Kirimlar</th>
+          <th class="right" data-i18n="users.expenses">Chiqimlar</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'finance/js/users.js' %}"></script>
+{% endblock %}

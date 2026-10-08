@@ -9,6 +9,25 @@ from django.utils.translation import gettext_lazy as _
 from .models import Currency, Account, ExpenseType, IncomeType, Expense, Income
 
 
+NAME_FIELDS = ["name_uz", "name_ru", "name_en"]
+
+
+def check_unique_names(model, owner, data, instance, message):
+    # Bir foydalanuvchida har bir tilda bir xil nom ikki marta bo'lmasin
+    errors = {}
+    for field in NAME_FIELDS:
+        value = data.get(field)
+        if not value:
+            continue
+        found = model.objects.filter(owner=owner, **{field: value})
+        if instance:
+            found = found.exclude(pk=instance.pk)
+        if found.exists():
+            errors[field] = message
+    if errors:
+        raise serializers.ValidationError(errors)
+
+
 class UserSerializer(serializers.ModelSerializer):
     # Profil uchun: foydalanuvchi ma'lumoti
     class Meta:
@@ -24,6 +43,20 @@ class UserSerializer(serializers.ModelSerializer):
         if users.exists():
             raise serializers.ValidationError(_("Bu email allaqachon band."))
         return value.lower()
+
+
+class UserAdminSerializer(serializers.ModelSerializer):
+    # Superadmin uchun: foydalanuvchi va uning yozuvlari soni
+    accounts_count = serializers.IntegerField(read_only=True)
+    incomes_count = serializers.IntegerField(read_only=True)
+    expenses_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            "id", "username", "email", "first_name", "last_name", "is_superuser",
+            "date_joined", "last_login", "accounts_count", "incomes_count", "expenses_count",
+        ]
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -75,20 +108,25 @@ class LoginSerializer(serializers.Serializer):
 
 
 class CurrencySerializer(serializers.ModelSerializer):
+    # name: so'rov tilidagi nom, name_uz / name_ru / name_en: tahrirlash uchun
+    name = serializers.CharField(source="translated_name", read_only=True)
+
     class Meta:
         model = Currency
-        fields = ["id", "name", "code"]
+        fields = ["id", "name", "name_uz", "name_ru", "name_en", "code"]
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="translated_name", read_only=True)
+    owner_name = serializers.CharField(source="owner.username", read_only=True)
     currency_code = serializers.CharField(source="currency.code", read_only=True)
     balance = serializers.SerializerMethodField()
 
     class Meta:
         model = Account
         fields = [
-            "id", "name", "currency", "currency_code",
-            "initial_balance", "balance", "created_at",
+            "id", "name", "name_uz", "name_ru", "name_en", "owner_name", "currency",
+            "currency_code", "initial_balance", "balance", "created_at",
         ]
         read_only_fields = ["created_at"]
 
@@ -105,54 +143,56 @@ class AccountSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(_("Boshlang'ich summa manfiy bo'lmasligi kerak."))
         return value
 
-    def validate_name(self, value):
-        # Bir foydalanuvchida bir xil nomli hisob ikki marta bo'lmasin
-        user = self.instance.owner if self.instance else self.context["request"].user
-        accounts = Account.objects.filter(owner=user, name=value)
-        if self.instance:
-            accounts = accounts.exclude(pk=self.instance.pk)
-        if accounts.exists():
-            raise serializers.ValidationError(_("Bunday nomli hisob allaqachon bor."))
-        return value
+    def validate(self, data):
+        owner = self.instance.owner if self.instance else self.context["request"].user
+        check_unique_names(
+            Account, owner, data, self.instance, _("Bunday nomli hisob allaqachon bor.")
+        )
+        return data
 
 
 class ExpenseTypeSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="translated_name", read_only=True)
+    owner_name = serializers.CharField(source="owner.username", read_only=True)
+
     class Meta:
         model = ExpenseType
-        fields = ["id", "name"]
+        fields = ["id", "name", "name_uz", "name_ru", "name_en", "owner_name"]
 
-    def validate_name(self, value):
-        user = self.instance.owner if self.instance else self.context["request"].user
-        types = ExpenseType.objects.filter(owner=user, name=value)
-        if self.instance:
-            types = types.exclude(pk=self.instance.pk)
-        if types.exists():
-            raise serializers.ValidationError(_("Bunday nomli chiqim turi allaqachon bor."))
-        return value
+    def validate(self, data):
+        owner = self.instance.owner if self.instance else self.context["request"].user
+        check_unique_names(
+            ExpenseType, owner, data, self.instance, _("Bunday nomli chiqim turi allaqachon bor.")
+        )
+        return data
 
 
 class IncomeTypeSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="translated_name", read_only=True)
+    owner_name = serializers.CharField(source="owner.username", read_only=True)
+
     class Meta:
         model = IncomeType
-        fields = ["id", "name"]
+        fields = ["id", "name", "name_uz", "name_ru", "name_en", "owner_name"]
 
-    def validate_name(self, value):
-        user = self.instance.owner if self.instance else self.context["request"].user
-        types = IncomeType.objects.filter(owner=user, name=value)
-        if self.instance:
-            types = types.exclude(pk=self.instance.pk)
-        if types.exists():
-            raise serializers.ValidationError(_("Bunday nomli kirim turi allaqachon bor."))
-        return value
+    def validate(self, data):
+        owner = self.instance.owner if self.instance else self.context["request"].user
+        check_unique_names(
+            IncomeType, owner, data, self.instance, _("Bunday nomli kirim turi allaqachon bor.")
+        )
+        return data
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
-    type_name = serializers.CharField(source="type.name", read_only=True)
-    account_name = serializers.CharField(source="account.name", read_only=True)
+    owner_name = serializers.CharField(source="owner.username", read_only=True)
+    type_name = serializers.CharField(source="type.translated_name", read_only=True)
+    account_name = serializers.CharField(source="account.translated_name", read_only=True)
 
     class Meta:
         model = Expense
-        fields = ["id", "type", "type_name", "account", "account_name", "amount", "date"]
+        fields = [
+            "id", "owner_name", "type", "type_name", "account", "account_name", "amount", "date",
+        ]
 
     def validate_amount(self, value):
         if value <= 0:
@@ -174,12 +214,15 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 
 class IncomeSerializer(serializers.ModelSerializer):
-    type_name = serializers.CharField(source="type.name", read_only=True)
-    account_name = serializers.CharField(source="account.name", read_only=True)
+    owner_name = serializers.CharField(source="owner.username", read_only=True)
+    type_name = serializers.CharField(source="type.translated_name", read_only=True)
+    account_name = serializers.CharField(source="account.translated_name", read_only=True)
 
     class Meta:
         model = Income
-        fields = ["id", "type", "type_name", "account", "account_name", "amount", "date"]
+        fields = [
+            "id", "owner_name", "type", "type_name", "account", "account_name", "amount", "date",
+        ]
 
     def validate_amount(self, value):
         if value <= 0:

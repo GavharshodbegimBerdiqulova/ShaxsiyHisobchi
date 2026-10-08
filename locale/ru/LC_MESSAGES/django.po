@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-08 11:37+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+msgid "Bu email allaqachon band."
+msgstr "Этот email уже занят."
+
+#, fuzzy
+#| msgid "Nomi"
+msgid "Nomi (UZ)"
+msgstr "Название"
+
+#, fuzzy
+#| msgid "Nomi"
+msgid "Nomi (RU)"
+msgstr "Название"
+
+#, fuzzy
+#| msgid "Nomi"
+msgid "Nomi (EN)"
+msgstr "Название"
+
+msgid "Kodi"
+msgstr "Код"
+
+msgid "Valyuta"
+msgstr "Валюта"
+
+msgid "Valyutalar"
+msgstr "Валюты"
+
+msgid "Egasi"
+msgstr "Владелец"
+
+msgid "Boshlang'ich summa"
+msgstr "Начальная сумма"
+
+msgid "Hisob"
+msgstr "Счёт"
+
+msgid "Hisoblar"
+msgstr "Счета"
+
+msgid "Chiqim turi"
+msgstr "Категория расхода"
+
+msgid "Chiqim turlari"
+msgstr "Категории расходов"
+
+msgid "Kirim turi"
+msgstr "Категория дохода"
+
+msgid "Kirim turlari"
+msgstr "Категории доходов"
+
+msgid "Turi"
+msgstr "Категория"
+
+msgid "Summa"
+msgstr "Сумма"
+
+msgid "Sana"
+msgstr "Дата"
+
+msgid "Chiqim"
+msgstr "Расход"
+
+msgid "Chiqimlar"
+msgstr "Расходы"
+
+msgid "Kirim"
+msgstr "Доход"
+
+msgid "Kirimlar"
+msgstr "Доходы"
+
+msgid "Parollar bir xil emas."
+msgstr "Пароли не совпадают."
+
+msgid "Login yoki parol noto'g'ri."
+msgstr "Неверный логин или пароль."
+
+msgid "Boshlang'ich summa manfiy bo'lmasligi kerak."
+msgstr "Начальная сумма не может быть отрицательной."
+
+msgid "Bunday nomli hisob allaqachon bor."
+msgstr "Счёт с таким названием уже есть."
+
+msgid "Bunday nomli chiqim turi allaqachon bor."
+msgstr "Категория расходов с таким названием уже есть."
+
+msgid "Bunday nomli kirim turi allaqachon bor."
+msgstr "Категория доходов с таким названием уже есть."
+
+msgid "Summa 0 dan katta bo'lishi kerak."
+msgstr "Сумма должна быть больше 0."
+
+msgid "Bu tur sizga tegishli emas."
+msgstr "Эта категория вам не принадлежит."
+
+msgid "Bu hisob sizga tegishli emas."
+msgstr "Этот счёт вам не принадлежит."
+
+msgid "Refresh token noto'g'ri yoki muddati o'tgan."
+msgstr "Refresh-токен недействителен или просрочен."
+
+msgid "Tizimdan chiqdingiz."
+msgstr "Вы вышли из системы."
+
+msgid "Bu yozuv ishlatilmoqda, uni o'chirib bo'lmaydi."
+msgstr "Эта запись используется, её нельзя удалить."
+
+msgid "Bu valyuta hisoblarda ishlatilmoqda, uni o'chirib bo'lmaydi."
+msgstr "Эта валюта используется в счетах, её нельзя удалить."
+
+msgid "Davr day, week yoki month bo'lishi kerak."
+msgstr "Период должен быть day, week или month."
+
+msgid "Sana YYYY-MM-DD ko'rinishida bo'lishi kerak."
+msgstr "Дата должна быть в формате YYYY-MM-DD."

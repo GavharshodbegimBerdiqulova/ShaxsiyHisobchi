@@ -1,0 +1,37 @@
+{% extends "finance/base_app.html" %}
+{% load static %}
+
+{% block page %}
+<section class="card">
+  <div class="section-head">
+    <h2 data-i18n="dash.report">Hisobot</h2>
+    <div class="tabs tabs-inline" id="period-tabs">
+      <button type="button" class="tab active" data-period="day" data-i18n="dash.day">Kun</button>
+      <button type="button" class="tab" data-period="week" data-i18n="dash.week">Hafta</button>
+      <button type="button" class="tab" data-period="month" data-i18n="dash.month">Oy</button>
+    </div>
+  </div>
+  <p class="muted" id="report-range"></p>
+  <div id="report"></div>
+</section>
+
+<section class="card">
+  <h2 data-i18n="dash.accounts">Hisoblarim 👛</h2>
+  <div class="grid" id="accounts"></div>
+</section>
+
+<div class="two-cols">
+  <section class="card">
+    <h2 data-i18n="dash.last_incomes">Oxirgi kirimlar 💰</h2>
+    <ul class="list" id="last-incomes"></ul>
+  </section>
+  <section class="card">
+    <h2 data-i18n="dash.last_expenses">Oxirgi chiqimlar 🛍️</h2>
+    <ul class="list" id="last-expenses"></ul>
+  </section>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'finance/js/dashboard.js' %}"></script>
+{% endblock %}

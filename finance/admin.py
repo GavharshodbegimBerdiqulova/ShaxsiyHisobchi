@@ -50,34 +50,34 @@ class MyUserAdmin(UserAdmin):
 
 @admin.register(Currency)
 class CurrencyAdmin(admin.ModelAdmin):
-    list_display = ("code", "name")
-    search_fields = ("code", "name")
+    list_display = ("code", "name_uz", "name_ru", "name_en")
+    search_fields = ("code", "name_uz", "name_ru", "name_en")
 
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner", "currency", "initial_balance", "created_at")
+    list_display = ("name_uz", "name_ru", "name_en", "owner", "currency", "initial_balance", "created_at")
     list_filter = ("currency",)
-    search_fields = ("name", "owner__username")
+    search_fields = ("name_uz", "name_ru", "name_en", "owner__username")
 
 
 @admin.register(ExpenseType)
 class ExpenseTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner")
-    search_fields = ("name", "owner__username")
+    list_display = ("name_uz", "name_ru", "name_en", "owner")
+    search_fields = ("name_uz", "name_ru", "name_en", "owner__username")
 
 
 @admin.register(IncomeType)
 class IncomeTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner")
-    search_fields = ("name", "owner__username")
+    list_display = ("name_uz", "name_ru", "name_en", "owner")
+    search_fields = ("name_uz", "name_ru", "name_en", "owner__username")
 
 
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
     list_display = ("date", "type", "account", "amount", "owner")
     list_filter = ("date", "type", "account")
-    search_fields = ("type__name", "account__name", "owner__username")
+    search_fields = ("type__name_uz", "type__name_ru", "type__name_en", "account__name_uz", "owner__username")
     date_hierarchy = "date"
 
 
@@ -85,5 +85,5 @@ class ExpenseAdmin(admin.ModelAdmin):
 class IncomeAdmin(admin.ModelAdmin):
     list_display = ("date", "type", "account", "amount", "owner")
     list_filter = ("date", "type", "account")
-    search_fields = ("type__name", "account__name", "owner__username")
+    search_fields = ("type__name_uz", "type__name_ru", "type__name_en", "account__name_uz", "owner__username")
     date_hierarchy = "date"
