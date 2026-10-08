@@ -243,3 +243,34 @@ class FinanceTest(TestCase):
     def test_report_wrong_params(self):
         self.assertEqual(self.client.get("/api/reports/?period=yil").status_code, 400)
         self.assertEqual(self.client.get("/api/reports/?date=bugun").status_code, 400)
+
+
+class AdminTest(TestCase):
+    def setUp(self):
+        from django.contrib.auth.models import User
+
+        self.admin = User.objects.create_superuser("admin", "admin@t.uz", "Parol12345!")
+        self.client.force_login(self.admin)
+
+    def test_admin_pages_open(self):
+        for name in ("currency", "account", "expensetype", "incometype", "expense", "income"):
+            r = self.client.get(f"/admin/finance/{name}/")
+            self.assertEqual(r.status_code, 200, name)
+        self.assertEqual(self.client.get("/admin/auth/user/").status_code, 200)
+        self.assertEqual(self.client.get("/admin/auth/user/add/").status_code, 200)
+
+    def test_admin_email_unique(self):
+        from django.contrib.auth.models import User
+
+        data = {
+            "username": "yangi", "email": "ADMIN@t.uz",
+            "password1": "Parol12345!", "password2": "Parol12345!", "usable_password": "true",
+        }
+        r = self.client.post("/admin/auth/user/add/", data)
+        self.assertEqual(r.status_code, 200)  # forma xato bilan qaytadi
+        self.assertFalse(User.objects.filter(username="yangi").exists())
+
+        data["email"] = "yangi@t.uz"
+        r = self.client.post("/admin/auth/user/add/", data)
+        self.assertEqual(r.status_code, 302)
+        self.assertTrue(User.objects.filter(username="yangi").exists())

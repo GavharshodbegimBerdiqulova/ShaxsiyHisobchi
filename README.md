@@ -1,10 +1,45 @@
 # ShaxsiyHisobchi
 
-Shaxsiy kirim-chiqimlarni nazorat qiluvchi dastur (backend: API va admin panel).
+## Bu loyiha nima haqida?
 
-## Loyiha nima uchun kerak?
+**ShaxsiyHisobchi** shaxsiy kirim-chiqimlarni nazorat qiluvchi dastur (hozircha backend: API va admin panel).
 
-Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotganini (chiqim) yozib boradi. Dastur kunlik, haftalik va oylik hisobot beradi. Shunda foydalanuvchi oyda qancha topgani, qancha sarflagani va qancha qolganini ko'radi.
+Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotganini (chiqim) yozib boradi. Pul turgan joylar (naqd pul, karta, valyuta hisobi) alohida hisoblar sifatida yuritiladi. Dastur kunlik, haftalik va oylik hisobot beradi. Shunda foydalanuvchi oyda qancha topgani, qancha sarflagani va qancha qolganini ko'radi.
+
+Misol: foydalanuvchi "Karta" hisobini 1 000 000 so'm bilan ochadi, "Avans" nomli kirim turi bilan 500 000 so'm kirim va "Tushlik" nomli chiqim turi bilan 30 000 so'm chiqim yozadi. Hisobdagi qoldiq 1 470 000 so'm bo'lib ko'rinadi.
+
+## Loyihani qanday ishga tushirish mumkin?
+
+Kerak bo'ladi: Python 3.12 yoki undan yangisi (loyiha 3.14 da yozilgan). Barcha buyruqlar loyiha papkasida (`manage.py` turgan joyda) yoziladi.
+
+```bash
+# 1. Virtual muhit yaratish (faqat birinchi marta)
+python3 -m venv venv
+
+# 2. Virtual muhitni yoqish
+source venv/bin/activate          # Windows'da: venv\Scripts\activate
+
+# 3. Kerakli paketlarni o'rnatish (faqat birinchi marta)
+pip install -r requirements.txt
+
+# 4. Bazani tayyorlash
+python manage.py migrate
+
+# 5. Superadmin yaratish (faqat birinchi marta)
+python manage.py createsuperuser
+
+# 6. Serverni yurgizish
+python manage.py runserver
+```
+
+Server yurgandan keyin brauzerda oching:
+
+- http://127.0.0.1:8000/api/docs/ : Swagger. API'ni shu yerdan sinab ko'rish mumkin.
+- http://127.0.0.1:8000/admin/ : admin panel (superadmin login va paroli bilan kiriladi).
+
+Boshlash uchun: Swagger'da `register` orqali ro'yxatdan o'ting, `login` qiling, javobdagi `access` tokenni **Authorize** tugmasiga joylang. Shundan keyin hisob, tur, kirim va chiqim qo'shishingiz mumkin. Hisob ochishdan oldin valyuta kerak. Valyutani (masalan UZS) faqat superadmin qo'sha oladi: admin panelda **Valyutalar** bo'limidan yoki superadmin sifatida `login` qilib `POST /api/currencies/` orqali qo'shing.
+
+Testlarni yurgizish: `python manage.py test`
 
 ## Asosiy qoidalar
 
@@ -77,6 +112,14 @@ Hammasi `Authorization: Bearer <access>` talab qiladi. Har bir manzil uchun ro'y
 - Kirim yoki chiqimga faqat o'zingizning hisobingiz va turingizni tanlay olasiz.
 - Kirim yoki chiqimda ishlatilgan tur yoki hisobni, hisobda ishlatilgan valyutani o'chirib bo'lmaydi (xabar bilan 400 qaytadi).
 
+## Admin panel
+
+Manzil: http://127.0.0.1:8000/admin/ (superadmin bilan kiriladi).
+
+- Foydalanuvchilar, valyutalar, hisoblar, chiqim va kirim turlari, chiqimlar va kirimlarni ko'rish, qo'shish, o'zgartirish va o'chirish mumkin.
+- Ro'yxatlarda kerakli ustunlar ko'rinadi, qidiruv va filtrlar bor. Kirim va chiqimda sana bo'yicha tezkor filtr ham bor.
+- Foydalanuvchi qo'shish yoki o'zgartirishda email takrorlanishi tekshiriladi (API'dagi kabi).
+
 ## API hujjati (Swagger)
 
 Serverni yurgizgandan keyin brauzerda oching:
@@ -96,7 +139,7 @@ Himoyalangan endpoint'larni sinash uchun: avval `login` ni ishga tushiring, javo
 | 3.5 | Kirish tizimi (JWT: register, login, token yangilash, logout, profil, ruxsatlar) | Tayyor |
 | 3.6 | Swagger (API hujjati) | Tayyor |
 | 4 | View'lar (API amallari va hisobotlar) | Tayyor |
-| 5 | Admin panel (URL manzillar tayyor) | Kutilmoqda |
+| 5 | Admin panel va URL manzillar | Tayyor |
 | 6 | 3 tilga tarjima | Kutilmoqda |
 | 7 | Tekshirish va sinov | Kutilmoqda |
 | 8 | Himoyaga tayyorgarlik | Kutilmoqda |
@@ -113,31 +156,6 @@ Har bosqich alohida tasdiqlanadi va tasdiqlangandan keyingina keyingisiga o'tila
 - Simple JWT (kirish tokenlari uchun)
 - drf-spectacular (Swagger hujjati uchun)
 - SQLite (ma'lumotlar bazasi, hozircha)
-
-## Loyihani ishga tushirish
-
-```bash
-# 1. Virtual muhitni yoqish
-source venv/bin/activate
-
-# 2. Kerakli paketlarni o'rnatish (birinchi marta)
-pip install -r requirements.txt
-
-# 3. Bazani tayyorlash
-python manage.py migrate
-
-# 4. Superadmin yaratish
-python manage.py createsuperuser
-
-# 5. Serverni yurgizish
-python manage.py runserver
-```
-
-Admin panel: http://127.0.0.1:8000/admin/ (5-bosqichdan keyin ishlaydi)
-
-Swagger: http://127.0.0.1:8000/api/docs/
-
-Testlarni yurgizish: `python manage.py test`
 
 ## Papkalar
 
