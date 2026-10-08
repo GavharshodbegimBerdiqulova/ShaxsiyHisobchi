@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.db.models import Sum
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
@@ -91,11 +92,13 @@ class AccountSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["created_at"]
 
+    @extend_schema_field(serializers.DecimalField(max_digits=16, decimal_places=2))
     def get_balance(self, obj):
         # Joriy qoldiq = boshlang'ich summa + kirimlar - chiqimlar
         income = obj.incomes.aggregate(total=Sum("amount"))["total"] or 0
         expense = obj.expenses.aggregate(total=Sum("amount"))["total"] or 0
-        return obj.initial_balance + income - expense
+        # summalar API'da matn ko'rinishida beriladi (amount kabi)
+        return str(obj.initial_balance + income - expense)
 
     def validate_initial_balance(self, value):
         if value < 0:
@@ -104,7 +107,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     def validate_name(self, value):
         # Bir foydalanuvchida bir xil nomli hisob ikki marta bo'lmasin
-        user = self.context["request"].user
+        user = self.instance.owner if self.instance else self.context["request"].user
         accounts = Account.objects.filter(owner=user, name=value)
         if self.instance:
             accounts = accounts.exclude(pk=self.instance.pk)
@@ -119,7 +122,7 @@ class ExpenseTypeSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
     def validate_name(self, value):
-        user = self.context["request"].user
+        user = self.instance.owner if self.instance else self.context["request"].user
         types = ExpenseType.objects.filter(owner=user, name=value)
         if self.instance:
             types = types.exclude(pk=self.instance.pk)
@@ -134,7 +137,7 @@ class IncomeTypeSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
     def validate_name(self, value):
-        user = self.context["request"].user
+        user = self.instance.owner if self.instance else self.context["request"].user
         types = IncomeType.objects.filter(owner=user, name=value)
         if self.instance:
             types = types.exclude(pk=self.instance.pk)
@@ -199,6 +202,7 @@ class IncomeSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.Serializer):
     # Hisobot bazadagi jadval emas, shuning uchun oddiy Serializer
     period = serializers.CharField()
+    currency = serializers.CharField()
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     total_income = serializers.DecimalField(max_digits=16, decimal_places=2)

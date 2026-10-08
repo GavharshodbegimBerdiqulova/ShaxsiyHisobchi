@@ -1,13 +1,24 @@
+import calendar
+from datetime import date, timedelta
+
+from django.db.models import ProtectedError, Sum
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import generics, serializers, status
-from rest_framework.permissions import AllowAny
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema, inline_serializer
+from rest_framework import generics, serializers, status, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import LoginSerializer, RegisterSerializer, UserSerializer
+from .models import Account, Currency, Expense, ExpenseType, Income, IncomeType
+from .permissions import IsOwnerOrSuperuser, IsSuperuserOrReadOnly
+from .serializers import (
+    AccountSerializer, CurrencySerializer, ExpenseSerializer, ExpenseTypeSerializer,
+    IncomeSerializer, IncomeTypeSerializer, LoginSerializer, RegisterSerializer,
+    ReportSerializer, UserSerializer,
+)
 
 
 # ---------- Auth ----------
@@ -89,3 +100,172 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+# ---------- Asosiy CRUD view'lar ----------
+
+class OwnerViewSet(viewsets.ModelViewSet):
+    """Hamma CRUD view'lar uchun umumiy qoidalar:
+    - oddiy foydalanuvchi faqat o'z yozuvlarini ko'radi, superadmin hammasini
+    - yangi yozuv egasi avtomatik joriy foydalanuvchi bo'ladi
+    - ishlatilayotgan yozuvni o'chirib bo'lmaydi
+    """
+    permission_classes = [IsAuthenticated, IsOwnerOrSuperuser]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {"detail": _("Bu yozuv ishlatilmoqda, uni o'chirib bo'lmaydi.")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class CurrencyViewSet(viewsets.ModelViewSet):
+    # Valyutani hamma ko'radi, qo'shish va o'zgartirishni faqat superadmin qiladi
+    queryset = Currency.objects.all()
+    serializer_class = CurrencySerializer
+    permission_classes = [IsSuperuserOrReadOnly]
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {"detail": _("Bu valyuta hisoblarda ishlatilmoqda, uni o'chirib bo'lmaydi.")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class AccountViewSet(OwnerViewSet):
+    queryset = Account.objects.select_related("currency")
+    serializer_class = AccountSerializer
+
+
+class ExpenseTypeViewSet(OwnerViewSet):
+    queryset = ExpenseType.objects.all()
+    serializer_class = ExpenseTypeSerializer
+
+
+class IncomeTypeViewSet(OwnerViewSet):
+    queryset = IncomeType.objects.all()
+    serializer_class = IncomeTypeSerializer
+
+
+def filter_by_params(queryset, params):
+    # Kirim va chiqim ro'yxatini filtrlash: ?date_from=&date_to=&account=&type=
+    if params.get("date_from"):
+        queryset = queryset.filter(date__gte=params["date_from"])
+    if params.get("date_to"):
+        queryset = queryset.filter(date__lte=params["date_to"])
+    if params.get("account"):
+        queryset = queryset.filter(account_id=params["account"])
+    if params.get("type"):
+        queryset = queryset.filter(type_id=params["type"])
+    return queryset
+
+
+class ExpenseViewSet(OwnerViewSet):
+    queryset = Expense.objects.select_related("type", "account")
+    serializer_class = ExpenseSerializer
+
+    def get_queryset(self):
+        return filter_by_params(super().get_queryset(), self.request.query_params)
+
+
+class IncomeViewSet(OwnerViewSet):
+    queryset = Income.objects.select_related("type", "account")
+    serializer_class = IncomeSerializer
+
+    def get_queryset(self):
+        return filter_by_params(super().get_queryset(), self.request.query_params)
+
+
+# ---------- Hisobot ----------
+
+def get_period_dates(period, day):
+    # Berilgan kun uchun davr boshi va oxirini topadi
+    if period == "day":
+        return day, day
+    if period == "week":
+        start = day - timedelta(days=day.weekday())  # dushanba
+        return start, start + timedelta(days=6)
+    last_day = calendar.monthrange(day.year, day.month)[1]
+    return day.replace(day=1), day.replace(day=last_day)
+
+
+class ReportView(APIView):
+    """Kunlik, haftalik yoki oylik hisobot.
+    ?period=day|week|month (standart: day) va ?date=YYYY-MM-DD (standart: bugun).
+    Valyutalar aralashib ketmasligi uchun natija valyuta bo'yicha alohida beriladi.
+    """
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter("period", str, enum=["day", "week", "month"], description="Davr"),
+            OpenApiParameter("date", OpenApiTypes.DATE, description="Qaysi kun (YYYY-MM-DD)"),
+        ],
+        responses=ReportSerializer(many=True),
+    )
+    def get(self, request):
+        period = request.query_params.get("period", "day")
+        if period not in ("day", "week", "month"):
+            return Response(
+                {"period": _("Davr day, week yoki month bo'lishi kerak.")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        date_text = request.query_params.get("date")
+        if date_text:
+            try:
+                day = date.fromisoformat(date_text)
+            except ValueError:
+                return Response(
+                    {"date": _("Sana YYYY-MM-DD ko'rinishida bo'lishi kerak.")},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        else:
+            day = date.today()
+
+        start, end = get_period_dates(period, day)
+
+        incomes = Income.objects.filter(date__range=(start, end))
+        expenses = Expense.objects.filter(date__range=(start, end))
+        if not request.user.is_superuser:
+            incomes = incomes.filter(owner=request.user)
+            expenses = expenses.filter(owner=request.user)
+
+        # valyuta kodi bo'yicha jami summalar
+        income_sums = incomes.values("account__currency__code").annotate(total=Sum("amount"))
+        expense_sums = expenses.values("account__currency__code").annotate(total=Sum("amount"))
+
+        totals = {}
+        for row in income_sums:
+            code = row["account__currency__code"]
+            totals.setdefault(code, {"income": 0, "expense": 0})["income"] = row["total"]
+        for row in expense_sums:
+            code = row["account__currency__code"]
+            totals.setdefault(code, {"income": 0, "expense": 0})["expense"] = row["total"]
+
+        result = []
+        for code, sums in totals.items():
+            result.append({
+                "period": period,
+                "currency": code,
+                "start_date": start,
+                "end_date": end,
+                "total_income": sums["income"],
+                "total_expense": sums["expense"],
+                "balance": sums["income"] - sums["expense"],
+            })
+        return Response(ReportSerializer(result, many=True).data)

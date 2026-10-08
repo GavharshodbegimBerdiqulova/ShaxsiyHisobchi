@@ -51,6 +51,32 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 
 **Ruxsatlar:** oddiy foydalanuvchi faqat o'z yozuvlarini o'zgartira oladi, superadmin hammasini. Valyutalarni hamma ko'ra oladi, o'zgartirishni faqat superadmin qiladi.
 
+## Asosiy API'lar
+
+Hammasi `Authorization: Bearer <access>` talab qiladi. Har bir manzil uchun ro'yxat (GET), bitta yozuv (GET `/<id>/`), qo'shish (POST), o'zgartirish (PUT, PATCH) va o'chirish (DELETE) ishlaydi.
+
+| Manzil | Nima uchun | Kim o'zgartira oladi |
+|---|---|---|
+| `/api/currencies/` | Valyutalar | Faqat superadmin (hamma ko'ra oladi) |
+| `/api/accounts/` | Hisoblar (nomi, valyuta, boshlang'ich summa, joriy qoldiq) | Egasi yoki superadmin |
+| `/api/expense-types/` | Chiqim turlari | Egasi yoki superadmin |
+| `/api/income-types/` | Kirim turlari | Egasi yoki superadmin |
+| `/api/expenses/` | Chiqimlar | Egasi yoki superadmin |
+| `/api/incomes/` | Kirimlar | Egasi yoki superadmin |
+| `/api/reports/` | Hisobot (faqat o'qish) | Hamma o'zinikini ko'radi |
+
+**Kirim va chiqimni filtrlash:** `?date_from=2026-10-01&date_to=2026-10-31&account=<id>&type=<id>`
+
+**Hisobot:** `/api/reports/?period=day|week|month&date=YYYY-MM-DD`
+- `period`: kun, hafta (dushanbadan yakshanbagacha) yoki oy. Bo'sh qoldirilsa `day`.
+- `date`: shu sana qaysi davrga tushsa, o'sha davr olinadi. Bo'sh qoldirilsa bugun.
+- Natijada jami kirim, jami chiqim va farqi (`balance`) bor. Valyutalar aralashib ketmasligi uchun har bir valyuta alohida qator bo'ladi.
+
+**Qoidalar:**
+- Summa 0 dan katta bo'lishi kerak.
+- Kirim yoki chiqimga faqat o'zingizning hisobingiz va turingizni tanlay olasiz.
+- Kirim yoki chiqimda ishlatilgan tur yoki hisobni, hisobda ishlatilgan valyutani o'chirib bo'lmaydi (xabar bilan 400 qaytadi).
+
 ## API hujjati (Swagger)
 
 Serverni yurgizgandan keyin brauzerda oching:
@@ -69,13 +95,13 @@ Himoyalangan endpoint'larni sinash uchun: avval `login` ni ishga tushiring, javo
 | 3 | Serializer'lar (ma'lumotni tekshirish va API formatiga o'tkazish) | Tayyor |
 | 3.5 | Kirish tizimi (JWT: register, login, token yangilash, logout, profil, ruxsatlar) | Tayyor |
 | 3.6 | Swagger (API hujjati) | Tayyor |
-| 4 | View'lar (API amallari va hisobotlar) | Kutilmoqda |
-| 5 | Admin panel va URL manzillar | Kutilmoqda |
+| 4 | View'lar (API amallari va hisobotlar) | Tayyor |
+| 5 | Admin panel (URL manzillar tayyor) | Kutilmoqda |
 | 6 | 3 tilga tarjima | Kutilmoqda |
 | 7 | Tekshirish va sinov | Kutilmoqda |
 | 8 | Himoyaga tayyorgarlik | Kutilmoqda |
 
-Frontend (ko'rinish qismi) hozircha qilinmaydi, oxirida qo'shiladi.
+Frontend (Django template, CSS va JS; pushti-gulli uslub) oxirida qo'shiladi.
 
 Har bosqich alohida tasdiqlanadi va tasdiqlangandan keyingina keyingisiga o'tiladi.
 
