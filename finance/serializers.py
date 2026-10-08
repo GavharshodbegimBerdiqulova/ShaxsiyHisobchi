@@ -1,8 +1,76 @@
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 from django.db.models import Sum
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
 from .models import Currency, Account, ExpenseType, IncomeType, Expense, Income
+
+
+class UserSerializer(serializers.ModelSerializer):
+    # Profil uchun: foydalanuvchi ma'lumoti
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "first_name", "last_name", "is_superuser"]
+        read_only_fields = ["username", "is_superuser"]
+
+    def validate_email(self, value):
+        # Email takrorlanmasin (katta-kichik harf farqi yo'q)
+        users = User.objects.filter(email__iexact=value)
+        if self.instance:
+            users = users.exclude(pk=self.instance.pk)
+        if users.exists():
+            raise serializers.ValidationError(_("Bu email allaqachon band."))
+        return value.lower()
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "first_name", "last_name", "password", "password2"]
+
+    def validate_email(self, value):
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError(_("Bu email allaqachon band."))
+        return value.lower()
+
+    def validate(self, data):
+        if data["password"] != data["password2"]:
+            raise serializers.ValidationError({"password2": _("Parollar bir xil emas.")})
+        validate_password(data["password"])
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop("password2")
+        # create_user parolni hash qilib saqlaydi
+        return User.objects.create_user(**validated_data)
+
+
+class LoginSerializer(serializers.Serializer):
+    # login maydoniga username ham, email ham yozish mumkin
+    login = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        login = data["login"]
+        if "@" in login:
+            found = User.objects.filter(email__iexact=login).first()
+            username = found.username if found else None
+        else:
+            username = login
+
+        user = authenticate(
+            request=self.context.get("request"), username=username, password=data["password"]
+        )
+        if user is None:
+            raise serializers.ValidationError(_("Login yoki parol noto'g'ri."))
+        data["user"] = user
+        return data
 
 
 class CurrencySerializer(serializers.ModelSerializer):

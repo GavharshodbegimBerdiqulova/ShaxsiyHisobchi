@@ -12,7 +12,7 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 - **Har kim o'zinikini ko'radi.** Foydalanuvchi faqat o'z hisoblari, turlari, kirimlari va chiqimlarini ko'radi va o'zgartiradi. Boshqa odamning ma'lumotini ko'ra olmaydi.
 - **Superadmin hamma narsani ko'radi.** Superadmin barcha foydalanuvchilarning ma'lumotiga kira oladi va valyutalarni boshqaradi.
 - **3 tilda ishlaydi:** o'zbekcha (asosiy), ruscha va inglizcha. Dastur matnlari va xabarlari foydalanuvchi tanlagan tilda chiqadi.
-- **Kirish tizimi:** foydalanuvchi login qiladi va token oladi. Token bilan API'dan foydalanadi.
+- **Kirish tizimi:** foydalanuvchi login qiladi va JWT token oladi: `access` (30 daqiqa) va `refresh` (7 kun). `access` bilan API'dan foydalanadi, muddati tugasa `refresh` orqali yangisini oladi.
 
 ## Ma'lumotlar tuzilishi (jadvallar)
 
@@ -37,6 +37,20 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 - Ishlatilayotgan tur yoki hisobni o'chirib bo'lmaydi. Shunda eski yozuvlar yo'qolmaydi.
 - Bir foydalanuvchida bir xil nomli hisob yoki tur ikki marta bo'lmaydi.
 
+## Kirish (autentifikatsiya) API'lari
+
+| Manzil | Usul | Vazifasi |
+|---|---|---|
+| `/api/auth/register/` | POST | Ro'yxatdan o'tish (`username`, `email`, `password`, `password2`). Username va email takrorlanmaydi. `access` va `refresh` token qaytaradi. |
+| `/api/auth/login/` | POST | `login` (username yoki email) va `password` bilan kirish. `access` va `refresh` token qaytaradi. |
+| `/api/auth/token/refresh/` | POST | `refresh` bersa, yangi `access` (va yangi `refresh`) qaytaradi. |
+| `/api/auth/logout/` | POST | Tizimdan chiqish: `refresh` token bekor qilinadi (blacklist). |
+| `/api/auth/profile/` | GET, PATCH | O'z ma'lumotini ko'rish va o'zgartirish. |
+
+`access` token so'rovga `Authorization: Bearer <access>` sarlavhasi bilan yuboriladi.
+
+**Ruxsatlar:** oddiy foydalanuvchi faqat o'z yozuvlarini o'zgartira oladi, superadmin hammasini. Valyutalarni hamma ko'ra oladi, o'zgartirishni faqat superadmin qiladi.
+
 ## Ishlash rejasi va holati
 
 | № | Bosqich | Holati |
@@ -44,6 +58,7 @@ Foydalanuvchi o'z pullarining qayerdan kelayotganini (kirim) va qayerga ketayotg
 | 1 | Loyiha skeleti va sozlamalar | Tayyor |
 | 2 | Modellar (jadvallar) | Tayyor |
 | 3 | Serializer'lar (ma'lumotni tekshirish va API formatiga o'tkazish) | Tayyor |
+| 3.5 | Kirish tizimi (register, login, logout, profil, ruxsatlar) | Tayyor |
 | 4 | View'lar (API amallari va hisobotlar) | Kutilmoqda |
 | 5 | Admin panel va URL manzillar | Kutilmoqda |
 | 6 | 3 tilga tarjima | Kutilmoqda |
@@ -59,6 +74,7 @@ Har bosqich alohida tasdiqlanadi va tasdiqlangandan keyingina keyingisiga o'tila
 - Python 3.14
 - Django 6.1 (asosiy freymvork)
 - Django REST Framework (API uchun)
+- Simple JWT (kirish tokenlari uchun)
 - SQLite (ma'lumotlar bazasi, hozircha)
 
 ## Loyihani ishga tushirish
@@ -82,9 +98,11 @@ python manage.py runserver
 
 Admin panel: http://127.0.0.1:8000/admin/ (5-bosqichdan keyin ishlaydi)
 
+Testlarni yurgizish: `python manage.py test`
+
 ## Papkalar
 
 - `config/` : loyihaning umumiy sozlamalari (`settings.py`, asosiy `urls.py`)
-- `finance/` : asosiy ilova (modellar, serializer'lar, view'lar, admin)
+- `finance/` : asosiy ilova (modellar, serializer'lar, view'lar, ruxsatlar, testlar, admin)
 - `locale/` : tarjima fayllari (uz, ru, en)
 - `requirements.txt` : kerakli paketlar ro'yxati
